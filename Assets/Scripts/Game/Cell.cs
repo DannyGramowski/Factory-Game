@@ -9,7 +9,7 @@ public class Cell : MonoBehaviour {
     [SerializeField] SpriteRenderer debugVisual;
     [SerializeField] TextMesh positionDisplay;
 
-    private const float scaleConst = 5;    
+    [SerializeField] float scaleConst = 5f;    
    public void Startup(Vector2Int pos, float cellSize) {
         transform.name = "cell " + Utils.Vector2IntToString(pos);
         this.pos = pos;

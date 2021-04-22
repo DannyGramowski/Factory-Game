@@ -147,7 +147,7 @@ MonoBehaviour:
   itemPos: {x: 0, y: 0, z: 0}
   debugVisual: {fileID: 1409319329326766500}
   positionDisplay: {fileID: 2824590262412196906}
-  cellSize: 8.064515
+  scaleConst: 4.6
 --- !u!1 &7499645389252800773
 GameObject:
   m_ObjectHideFlags: 0
