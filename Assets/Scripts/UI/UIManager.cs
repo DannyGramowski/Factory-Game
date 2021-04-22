@@ -2,8 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class UIManager : MonoBehaviour {
-    public static UIManager Instance { get; private set; }
+public class UIManager : Singleton<UIManager> {
 
     [SerializeField] RectTransform[] selectItemUIs;
     [SerializeField] DisplayItemsUI itemDisplay;
@@ -11,9 +10,6 @@ public class UIManager : MonoBehaviour {
 
 
     private void Awake() {
-
-        Utils.CheckSingletonValid<UIManager>(this);
-        Instance = this;
         gameObject.SetActive(false);
     }
 

@@ -5,7 +5,7 @@ using UnityEngine;
 public static class Utils {
     public static Vector3 rotate90Y = new Vector3(0, 90, 0) ; 
 
-  public static string Vector2INtToString(Vector2 vector2) {
+  public static string Vector2IntToString(Vector2 vector2) {
         return "(" + (int)vector2.x + "," + (int)vector2.y + ")"; 
     }
     
@@ -96,15 +96,15 @@ public static class Utils {
         return angle % 360;
     }
 
-    public static float Angle(Vector2 from,Vector2 to) {
-        return Mathf.Acos(Vector2.Dot(from, to) / (from.magnitude * to.magnitude));
+    public static float Angle(Vector2 offset) {
+        return Mathf.Rad2Deg * Mathf.Atan2(offset.y, offset.x);
     }
 
     public static Vector3 Vector3SetY(Vector3 input, float y) {
-        return ChangeElemntVector3(input, y, 'y');
+        return ChangeElementVector3(input, y, 'y');
     }
 
-    public static Vector3 ChangeElemntVector3(Vector3 input, float newNum, char setType) {
+    public static Vector3 ChangeElementVector3(Vector3 input, float newNum, char setType) {
         switch(setType) {
             case 'x':
                 return new Vector3(newNum, input.y, input.z);
@@ -131,12 +131,6 @@ public static class Utils {
             }
             throw new System.InvalidOperationException("you already have a singlton of type " + typeof(T));
         }
-    }
-
-    public static T GetFromDictionary<U,T>(U key, Dictionary<U, T> input) {
-        T temp;
-        input.TryGetValue(key, out temp);
-        return temp;
     }
    
 }

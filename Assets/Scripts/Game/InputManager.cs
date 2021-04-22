@@ -2,8 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class InputManager : MonoBehaviour {
-    public static InputManager Instance { get; private set; }
+public class InputManager : Singleton<InputManager> {
     public Building placingBuilding;
     public Vector3 buildingRot = new Vector3(0, 0, 0);
 
@@ -18,8 +17,6 @@ public class InputManager : MonoBehaviour {
     RaycastHit hit;
     Cell currHover;
     private void Awake() {
-        Utils.CheckSingletonValid<InputManager>(this);
-        Instance = this;
         grid = Grid.Instance;
         showDebug = GlobalPointers.showDebug;
     }
@@ -70,7 +67,6 @@ public class InputManager : MonoBehaviour {
             }
         }
     }
-
 
     void SelectBuilding() {
         if (Physics.Raycast(GlobalPointers.mainCamera.ScreenPointToRay(Input.mousePosition), out hit)) {
@@ -160,25 +156,30 @@ public class InputManager : MonoBehaviour {
         return false;
     }
 
-    private bool AddGrabber() {
+    private void AddGrabber() {
         Grabber g = placingBuilding as Grabber;
         Building hoverBuilding = currHover.building;
         
         if (hoverBuilding is ProductionBuilding) {
             if (!g.HasConnectedBuilding()) {
-                g.AddBuilding(currHover, hoverBuilding as ProductionBuilding, g.HasConnectedBelt());
+                print($"connected building valid{g.ValidPlacment(currHover.pos)}");
+                if (g.ValidPlacment(currHover.pos)) g.AddBuilding(currHover, hoverBuilding as ProductionBuilding, g.HasConnectedBelt());
+                else print("not valid placement");
             }
         } else if (hoverBuilding is Belt) {
             if (!g.HasConnectedBelt()) {
-                g.AddBelt(hoverBuilding as Belt, g.HasConnectedBuilding());
+                print($"connected belt valid{g.ValidPlacment(currHover.pos)}");
+
+                if (g.ValidPlacment(currHover.pos)) g.AddBelt(hoverBuilding as Belt, g.HasConnectedBuilding());
+                else print("not valid placment");
             }
         }
 
         if (g.HasBothConnections()) {
             placingBuilding = Instantiate(placingBuilding, GlobalPointers.buildingParent);
+            (placingBuilding as Grabber).ResetModel();
             placingBuilding.SetShowDebug(GlobalPointers.showDebug);
         }
-        return false;
     }
 
     private bool validCell(Vector2Int pos) {

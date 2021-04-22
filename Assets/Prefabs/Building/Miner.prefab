@@ -217,13 +217,48 @@ MonoBehaviour:
   selected: 0
   name: Miner
   placedCells: []
-  NotGrabberSpots: 1
+  NotGrabberSpots: 0
   grabberSpots:
-  - offSet: {x: 1, y: 1}
+  - offSet: {x: 0, y: 0}
     cell: {fileID: 0}
     spotType: 0
     connectedGrabber: {fileID: 0}
-    direction: 0
+    directions: b40000000e010000
+  - offSet: {x: 1, y: 0}
+    cell: {fileID: 0}
+    spotType: 0
+    connectedGrabber: {fileID: 0}
+    directions: b4000000
+  - offSet: {x: 2, y: 0}
+    cell: {fileID: 0}
+    spotType: 0
+    connectedGrabber: {fileID: 0}
+    directions: b40000005a000000
+  - offSet: {x: 0, y: 1}
+    cell: {fileID: 0}
+    spotType: 0
+    connectedGrabber: {fileID: 0}
+    directions: 0e010000
+  - offSet: {x: 2, y: 1}
+    cell: {fileID: 0}
+    spotType: 0
+    connectedGrabber: {fileID: 0}
+    directions: 5a000000
+  - offSet: {x: 0, y: 2}
+    cell: {fileID: 0}
+    spotType: 0
+    connectedGrabber: {fileID: 0}
+    directions: 000000000e010000
+  - offSet: {x: 1, y: 2}
+    cell: {fileID: 0}
+    spotType: 0
+    connectedGrabber: {fileID: 0}
+    directions: 00000000
+  - offSet: {x: 2, y: 2}
+    cell: {fileID: 0}
+    spotType: 0
+    connectedGrabber: {fileID: 0}
+    directions: 000000005a000000
   inventory:
     inventory: []
     maxStacks: 0

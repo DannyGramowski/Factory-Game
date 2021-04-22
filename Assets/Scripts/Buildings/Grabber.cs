@@ -5,8 +5,11 @@ using UnityEngine;
 [RequireComponent(typeof(Timer))]
 public class Grabber : Building, ISelectItem {
     [SerializeField] Transform model;
+    [SerializeField] Transform position;
     [SerializeField] EmptySpace emptySpace;
     [SerializeField] float timePerCell;
+    [SerializeField] int range;//number of cells it can go
+    [SerializeField] SpriteRenderer arrow;
 
     static Vector3 modelLocalScale;
     Belt connectedBelt;
@@ -14,6 +17,7 @@ public class Grabber : Building, ISelectItem {
     ProductionBuilding connectedBuilding;
     Timer timer;
     bool toBuilding;//if true belt to building
+    bool endPlaced = false;
 
     Item movingItem = null;
     Item filterItem;
@@ -25,9 +29,7 @@ public class Grabber : Building, ISelectItem {
         timer = GetComponent<Timer>();
         base.Awake();
         if (modelLocalScale.Equals(Vector3.zero)) {
-            print("model scale is " + model.transform.localScale);
             modelLocalScale = new Vector3(model.transform.localScale.x, model.transform.localScale.y, model.transform.localScale.z);
-            print("set local scale to " + modelLocalScale);
         }
     }
     private void Update() {
@@ -35,6 +37,8 @@ public class Grabber : Building, ISelectItem {
     }
 
     private void UpdateItemLogic() {
+       arrow.color =  movingItem != null ? Color.green : Color.red;
+        
         if (movingItem) {
             if (timer.TimerDone()) {
                 timer.StartTimer();
@@ -66,13 +70,20 @@ public class Grabber : Building, ISelectItem {
     public override void SetShowDebug(bool showDebug) {
         this.showDebug = showDebug;
     }
+
+    public void ResetModel() {
+        model.localScale = modelLocalScale;
+    }
     
     public void SetModel(Cell currHover) {
-        //print("set model"); 
+        if (!EndPlaced()) {
+            transform.position = currHover.itemPos;
+            return;
+        }
+
         Cell from = null;
         Cell to = null;
         this.currHover = currHover;
-
         if (toBuilding) {
             from = connectedBelt?.baseCell ?? currHover;
             to = grabberSpot?.cell ?? currHover;
@@ -80,55 +91,46 @@ public class Grabber : Building, ISelectItem {
             from = grabberSpot?.cell ?? currHover;
             to = connectedBelt?.baseCell ?? currHover;
         }
-       // print("form " + from + ": to " + to);
-        if(!HasGrabberSpot() && !HasConnectedBuilding()) {
-         //   print("set grabber to curr hover");
-            transform.position = currHover.itemPos;
-            return;
-        }
-
-
-
-        //print("set model loc to the middle");
-        model.transform.position = Vector3.Lerp(from.itemPos, to.itemPos, 0.5f);
-
-        Vector2Int offSet = from.pos - to.pos;
-        float angle = Utils.Angle(from.pos, to.pos);
-        print("angle " + angle);
-        model.eulerAngles = Utils.Vector3SetY(transform.eulerAngles, angle);
-
-        model.transform.localScale = new Vector3(modelLocalScale.x * offSet.magnitude, modelLocalScale.y, modelLocalScale.z * 0.6f);
-       /* transform.position = cell1.itemPos;
-        Vector2Int offSet = cell1.pos - cell2.pos;
-        Vector3 rot = Utils.Vector3SetY(transform.eulerAngles, Vector2.Angle());
-
-        transform.position = (cell1.itemPos + cell2.itemPos) / 2;
-        Vector2Int scaleFactor = Vector2Int.one + Utils.Vector2IntAbs(offSet);
-        int x = scaleFactor.x, y = scaleFactor.y;
        
-        scaleFactor = new Vector2Int(x, y);
-        Vector3 newScale = new Vector3(scaleFactor.x * modelLocalScale.x - 0.5f, modelLocalScale.y, modelLocalScale.z * scaleFactor.y + 0.5f);
-        //print("new scale = " + newScale);
-        model.localScale = newScale;*/
+        position.position = Vector3.Lerp(from.itemPos, to.itemPos, 0.5f);
+        Vector2Int offSet = from.pos - to.pos;
+        float angle = -Utils.Angle(offSet);
+        //print("angle " + angle);
+        position.eulerAngles = Utils.Vector3SetY(transform.eulerAngles, angle);
+        model.transform.localScale = new Vector3(modelLocalScale.x * offSet.magnitude, modelLocalScale.y, modelLocalScale.z * 0.6f);
+    }
+
+    public bool ValidPlacment(Vector2 currHover) {
+        if (!EndPlaced()) return true;//allows it to be placed if it does not have one end placed
+        if (HasBothConnections()) return false;
+
+        Vector2Int placedPos = (Vector2Int) (connectedBelt?.baseCell?.pos ?? grabberSpot?.cell.pos);
+        Vector2 offSet = (currHover - placedPos);
+        foreach(Direction direc in grabberSpot.directions) {
+            Vector2 direcVector = Utils.Vector2FromDirection(direc);
+            if(direcVector.Equals(offSet.normalized)) {
+                return offSet.magnitude <= range;
+            }
+        }
+        return false;
     }
     
 
     public void AddBuilding(Cell clickedLoc, ProductionBuilding b, bool input) {
+        endPlaced = true;
         connectedBuilding = b;
         toBuilding = input;
         grabberSpot = connectedBuilding.AddGrabber(clickedLoc, this, input);
         if (grabberSpot != null && connectedBelt) {
-            // print("added grabber spot");
             emptySpace.transform.position = connectedBelt.itemPos;
-           // print("empty space set to " + b.baseCell.pos);
             timer.StartUp(timePerCell * (Vector2Int.Distance(connectedBelt.baseCell.pos, grabberSpot.cell.pos)));
         }
     }
 
     public void AddBelt(Belt b, bool input) {
+        endPlaced = true;
         connectedBelt = b;
         emptySpace.transform.position = b.itemPos;
-       // print("empty space set to " + b.baseCell.pos);
         if (grabberSpot != null) {
            timer.StartUp(timePerCell * Vector2Int.Distance(connectedBelt.baseCell.pos, grabberSpot.cell.pos));
         }
@@ -147,6 +149,9 @@ public class Grabber : Building, ISelectItem {
 
     public bool HasBothConnections() {
         return HasConnectedBelt() && HasGrabberSpot();
+    }
+    public bool EndPlaced() {
+        return endPlaced;
     }
 
     private void OnDrawGizmos() {//cyan for the input and magenta for the output

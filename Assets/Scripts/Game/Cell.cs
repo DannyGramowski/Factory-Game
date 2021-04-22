@@ -8,19 +8,20 @@ public class Cell : MonoBehaviour {
     public Vector3 itemPos;
     [SerializeField] SpriteRenderer debugVisual;
     [SerializeField] TextMesh positionDisplay;
-    private const float scaleFactor = 5;
 
-   public void Startup(Vector2Int pos, float width, float height) {
+    private const float scaleConst = 5;    
+   public void Startup(Vector2Int pos, float cellSize) {
         transform.name = "cell " + Utils.Vector2IntToString(pos);
         this.pos = pos;
-        debugVisual.transform.localScale = new Vector3(width * scaleFactor, height * scaleFactor, 1);
+        debugVisual.transform.localScale = new Vector3(cellSize * scaleConst, cellSize * scaleConst, 1);
         positionDisplay.text = pos.ToString();
         itemPos = Utils.Vector3SetY(transform);
 
     }
 
     public void ShowDebug(bool visible) {
-        debugVisual.gameObject.SetActive(visible);
+        // debugVisual.gameObject.SetActive(visible);
+        positionDisplay.gameObject.SetActive(visible);
     }
 
     
