@@ -1,7 +1,5 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using System;
 
 [System.Serializable]
 public class BuildingInventory {
@@ -10,27 +8,27 @@ public class BuildingInventory {
 
     public BuildingInventory(int itemStackSlots) {
         maxStacks = itemStackSlots;
-        for(int i = 0; i < maxStacks; i++) {
+        for (int i = 0; i < maxStacks; i++) {
             inventory.Add(new ItemStack());
         }
     }
 
     public int GetEmptyStackIndex() {
-        for(int i = 0; i < inventory.Count; i++) {
+        for (int i = 0; i < inventory.Count; i++) {
             if (inventory[i].IsEmpty()) return i;
         }
         return -1;
     }
 
     public int GetStackIndex(Item item) {
-        for(int i = 0; i < inventory.Count; i++) {
+        for (int i = 0; i < inventory.Count; i++) {
             if (inventory[i].stackType.Equals(item)) return i;
         }
         return -1;
     }
 
     public Item GetFirstItem() {
-        foreach(ItemStack itemStack in inventory) {
+        foreach (ItemStack itemStack in inventory) {
             if (itemStack.stackType != null) return itemStack.GetItem();
         }
         return null;
@@ -54,7 +52,7 @@ public class BuildingInventory {
     }
 
     public ItemStack GetItemStack(Item item, int start) {
-        for(int i = 0; i < inventory.Count; i++) {
+        for (int i = 0; i < inventory.Count; i++) {
             if (!inventory[i].IsEmpty() && inventory[i].stackType.Equals(item)) return inventory[i];
         }
         return null;
@@ -95,7 +93,7 @@ public class BuildingInventory {
 
     public bool AddItemToStack(Item item) {
         ItemStack itemStack = GetItemStack(item);
-//        Debug.Log("item stack " + itemStack);
+        //        Debug.Log("item stack " + itemStack);
         if (itemStack != null) {
             return itemStack.AddItem(item);
         }
@@ -125,14 +123,15 @@ public class ItemStack {
             stack.Add(item);
             stackType = stack[0];
             return true;
-        }        return false;
+        }
+        return false;
     }
 
     public Item GetItem() {
         if (stack.Count > 0) {
             Item temp = stack[0];
             stack.RemoveAt(0);
-            if(stack.Count == 0) {
+            if (stack.Count == 0) {
                 Reset();
             }
             return temp;
@@ -141,7 +140,7 @@ public class ItemStack {
     }
 
     public bool IsFull() {
-        if(IsEmpty()) {
+        if (IsEmpty()) {
             return false;
         }
         return (stack.Count == stackType.stackSize);

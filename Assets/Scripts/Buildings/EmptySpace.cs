@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 [RequireComponent(typeof(BoxCollider))]
 public class EmptySpace : MonoBehaviour {
@@ -14,9 +12,8 @@ public class EmptySpace : MonoBehaviour {
     }
 
     // Update is called once per frame
-    void FixedUpdate()
-    {
-        if(change) isEmpty = true;
+    void FixedUpdate() {
+        if (change) isEmpty = true;
         change = true;
         item = null;
 

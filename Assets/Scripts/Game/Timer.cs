@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class Timer : MonoBehaviour {
@@ -8,9 +6,9 @@ public class Timer : MonoBehaviour {
     private bool looping;
 
     private void Update() {
-        if(!TimerDone()) {
+        if (!TimerDone()) {
             currTime -= Time.deltaTime;
-        }else if(looping) {
+        } else if (looping) {
             StartTimer();
         }
     }

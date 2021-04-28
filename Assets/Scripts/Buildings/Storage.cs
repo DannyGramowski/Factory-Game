@@ -1,8 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-
-public class Storage : ProductionBuilding {
+﻿public class Storage : ProductionBuilding {
 
     public override bool ItemInValid(Item item) {
         return inventory.HasSpace(item);
@@ -17,7 +13,7 @@ public class Storage : ProductionBuilding {
     }
 
     public override Item ItemOut(Item filterItem) {
-        if(filterItem) {
+        if (filterItem) {
             return inventory.GetItemStack(filterItem).GetItem();
         }
         Item item = inventory.GetFirstItem();

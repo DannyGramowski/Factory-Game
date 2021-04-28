@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 public class SliderPrefab : MonoBehaviour {
@@ -14,7 +12,7 @@ public class SliderPrefab : MonoBehaviour {
     public float time;
     public bool loop;
     Timer timer;
-    
+
     private void Awake() {
         SetInteractable();
         SetSliderColor();
@@ -34,7 +32,7 @@ public class SliderPrefab : MonoBehaviour {
     public void SetTimer() {
         if (!useTimer) return;
 
-       if(timer == null) timer = gameObject.AddComponent<Timer>();
+        if (timer == null) timer = gameObject.AddComponent<Timer>();
         timer.StartUp(time, loop);
     }
 
@@ -42,5 +40,5 @@ public class SliderPrefab : MonoBehaviour {
         if (percentageFull > 1 || percentageFull < 0) Debug.LogWarning($"{percentageFull} is not a  valid input");
         slider.value = percentageFull;
     }
-   
+
 }

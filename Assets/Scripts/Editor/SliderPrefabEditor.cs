@@ -1,10 +1,10 @@
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.UI;
-using UnityEditor;
 
 [CustomEditor(typeof(SliderPrefab))]
 public class SliderPrefabEditor : Editor {
- 
+
     public override void OnInspectorGUI() {
         SliderPrefab slider = (SliderPrefab)target;
         slider.slider = EditorGUILayout.ObjectField("slider", slider.slider, typeof(Slider), true) as Slider;
@@ -17,12 +17,12 @@ public class SliderPrefabEditor : Editor {
         slider.SetInteractable();
 
         EditorGUILayout.Space();
-        slider.useTimer = EditorGUILayout.BeginToggleGroup("use timer", slider.useTimer);
+        slider.useTimer = EditorGUILayout.Toggle("use timer", slider.useTimer);
+        if (slider.useTimer) {
             slider.time = EditorGUILayout.FloatField("timer time", slider.time);
             slider.loop = EditorGUILayout.Toggle("looping", slider.loop);
-            if (GUILayout.Button("set timer stats")) {
-                slider.SetTimer();
-            }
-        EditorGUILayout.EndToggleGroup();
+            if (GUILayout.Button("set timer stats")) slider.SetTimer();
+        }
     }
+
 }

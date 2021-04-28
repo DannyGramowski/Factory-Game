@@ -1,7 +1,5 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System;
 using UnityEngine;
-using System;
 
 public class SpawnButtons : MonoBehaviour {
     Building[] buildingPrefabs;
@@ -17,7 +15,7 @@ public class SpawnButtons : MonoBehaviour {
     }
 
     private Building SpawnBuilding(Building building) {
-        Building b = Instantiate(building,Input.mousePosition,Quaternion.identity,GlobalPointers.buildingParent);
+        Building b = Instantiate(building, Input.mousePosition, Quaternion.identity, GlobalPointers.buildingParent);
         b.ReduceNamingNum();
         b.SetShowDebug(GlobalPointers.showDebug);
         InputManager.Instance.placingBuilding = b;

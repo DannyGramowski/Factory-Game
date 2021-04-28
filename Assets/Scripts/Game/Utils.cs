@@ -1,16 +1,16 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using UnityEditor;
 using UnityEngine;
 
 public static class Utils {
-    public static Vector3 rotate90Y = new Vector3(0, 90, 0) ; 
-
-  public static string Vector2IntToString(Vector2 vector2) {
-        return "(" + (int)vector2.x + "," + (int)vector2.y + ")"; 
+    public static Vector3 rotate90Y = new Vector3(0, 90, 0);
+    public static string ITEM_FOLDER_PATH => "Assets/Prefabs/Items";
+    public static string Vector2IntToString(Vector2 vector2) {
+        return "(" + (int)vector2.x + "," + (int)vector2.y + ")";
     }
-    
+
     public static string Vector2IntToString(Vector2Int vector2Int) {
-        return "(" + (int)vector2Int.x + "," + (int)vector2Int.y + ")"; 
+        return "(" + vector2Int.x + "," + vector2Int.y + ")";
     }
 
     public static Vector2Int Vector2IntAbs(Vector2Int input) {
@@ -18,8 +18,8 @@ public static class Utils {
     }
 
     public static Vector2Int NormalizeVector2(Vector2Int input) {
-        int x = 0, y = 0;   
-        if(input.x != 0) {
+        int x = 0, y = 0;
+        if (input.x != 0) {
             x = input.x / Mathf.Abs(input.x);
         }
         if (input.y != 0) {
@@ -59,7 +59,7 @@ public static class Utils {
 
     public static Direction AngleToDirection(float angle) {
         angle = AngleTo90s(ReduceAngle(angle));
-     //   Debug.Log("angle to direction angle " + angle);
+        //   Debug.Log("angle to direction angle " + angle);
         switch (angle) {
             case 0:
                 return Direction.up;
@@ -81,7 +81,7 @@ public static class Utils {
 
     public static float AngleTo90s(float angle) {
         float angleDifference = angle % 90;
-        if(angleDifference > 45) {
+        if (angleDifference > 45) {
             angle += angleDifference;
         } else {
             angle -= angleDifference;
@@ -105,7 +105,7 @@ public static class Utils {
     }
 
     public static Vector3 ChangeElementVector3(Vector3 input, float newNum, char setType) {
-        switch(setType) {
+        switch (setType) {
             case 'x':
                 return new Vector3(newNum, input.y, input.z);
             case 'y':
@@ -123,14 +123,15 @@ public static class Utils {
         return Vector3SetY(transform.position, GlobalPointers.itemHeight);
     }
 
-    public static void CheckSingletonValid<T>(T instanceCheck) where T : MonoBehaviour {
-        T[] temp = Transform.FindObjectsOfType<T>();
-        if (temp.Length > 1) {
-            foreach(T t in  temp) {
-                Debug.Log(t);
-            }
-            throw new System.InvalidOperationException("you already have a singlton of type " + typeof(T));
+    public static List<T> GetAssets<T>(string searchName, string[] path) where T : UnityEngine.Object {
+        string[] assets = AssetDatabase.FindAssets(searchName, path);
+        List<T> output = new List<T>();
+        foreach (string guid in assets) {
+            T temp = AssetDatabase.LoadAssetAtPath<T>(AssetDatabase.GUIDToAssetPath(guid));
+            if (temp != null) output.Add(temp);
         }
+        return output;
+
     }
-   
+
 }

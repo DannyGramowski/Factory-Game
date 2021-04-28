@@ -1,4 +1,3 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -14,7 +13,7 @@ public abstract class ProductionBuilding : Building {
     protected override void Awake() {
         Debug.Assert(numberOfStacks > 0 || this is Assembler, "you need to set the number of inventory slots");
         inventory = new BuildingInventory(numberOfStacks);
-        
+
         base.Awake();
     }
 
@@ -23,17 +22,17 @@ public abstract class ProductionBuilding : Building {
     }
 
     private void SetUpGrabberSpots() {
-            foreach (GrabberSpot g in grabberSpots) {
-                g.SetGrabberCell(this);
-            }
+        foreach (GrabberSpot g in grabberSpots) {
+            g.SetGrabberCell(this);
+        }
     }
 
-    public void SetGrabberSpots (List<GrabberSpot> grabberSpots) {
+    public void SetGrabberSpots(List<GrabberSpot> grabberSpots) {
         this.grabberSpots.Clear();
         this.grabberSpots = grabberSpots;
     }
 
-    public GrabberSpot AddGrabber(Cell loc, Grabber g,bool input) {
+    public GrabberSpot AddGrabber(Cell loc, Grabber g, bool input) {
         GrabberSpot grabberSpot = HasGrabberSpot(loc);
         if (grabberSpot != null) {
             grabberSpot.connectedGrabber = g;
@@ -45,7 +44,7 @@ public abstract class ProductionBuilding : Building {
                 return grabberSpot;
             }
         }
-         return null;
+        return null;
     }
 
     public GrabberSpot HasGrabberSpot(Cell checkCell) {
@@ -60,11 +59,11 @@ public abstract class ProductionBuilding : Building {
 
     public virtual void ItemIn(Item item) { }
 
-    public virtual bool ItemInValid(Item item) { return false;}
+    public virtual bool ItemInValid(Item item) { return false; }
 
     public virtual Item ItemOut(Item filterItem) { return null; }
 
-    public virtual bool ItemOutValid(Item filterItem) { return false;}
+    public virtual bool ItemOutValid(Item filterItem) { return false; }
 }
 
 [System.Serializable]
@@ -88,13 +87,13 @@ public class GrabberSpot {
         for (int i = 0; i < directions.Count; i++) {
             directions[i] = Utils.AddDirection(directions[i], productionBuilding.direction);
         }
-    }  
+    }
 
     public GrabberSpot(Vector2Int offSet, List<Direction> setDirections, IOType ioType) {
         this.offSet = offSet;
         directions = setDirections;
         spotType = ioType;
-    } 
+    }
 }
 
 public enum IOType {

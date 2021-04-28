@@ -1,5 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 
 [SelectionBase]
@@ -16,7 +15,7 @@ public abstract class Building : MonoBehaviour {
 
     static int[] namingNums;
 
-    
+
     protected virtual void Awake() {
         namingNums = new int[GlobalPointers.buildingPrefabs.Length];
         namingNums[buildingType]++;
@@ -27,7 +26,7 @@ public abstract class Building : MonoBehaviour {
     public virtual void Placed() { }
 
     public Vector3 Rotate(Vector3 buildingRot) {
-        dimensions  = Utils.SwapVector2(dimensions);
+        dimensions = Utils.SwapVector2(dimensions);
         SetPosition();
         buildingRot += Utils.rotate90Y;
         transform.eulerAngles = buildingRot;
@@ -61,14 +60,14 @@ public abstract class Building : MonoBehaviour {
     }
 
     private void SetPlacedCells() {
-       // placedCells.Add(baseCell);
-            for (int x = baseCell.pos.x ; x < baseCell.pos.x + dimensions.x; x++) {
-                for (int y = baseCell.pos.y ; y < baseCell.pos.y + dimensions.y; y++) {
+        // placedCells.Add(baseCell);
+        for (int x = baseCell.pos.x; x < baseCell.pos.x + dimensions.x; x++) {
+            for (int y = baseCell.pos.y; y < baseCell.pos.y + dimensions.y; y++) {
                 placedCells.Add(Grid.Instance.GetCell(x, y));
             }
         }
-        
-        foreach(Cell c in placedCells) {
+
+        foreach (Cell c in placedCells) {
             c.building = this;
         }
     }

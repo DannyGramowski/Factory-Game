@@ -1,4 +1,3 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -10,7 +9,7 @@ public class SetUpGrabber : MonoBehaviour {
     [SerializeField] int generationType;
 
     public void GenerateGrabbers() {
-        switch(generationType) {
+        switch (generationType) {
             case 1:
                 GenerateBorders();
                 break;
@@ -23,22 +22,22 @@ public class SetUpGrabber : MonoBehaviour {
     public void GenerateBorders() {
         List<GrabberSpot> temp = new List<GrabberSpot>();
 
-        for(int x = 0; x < setGrabbers.dimensions.x; x++) {
-            for(int y = 0; y < setGrabbers.dimensions.y; y++) {
+        for (int x = 0; x < setGrabbers.dimensions.x; x++) {
+            for (int y = 0; y < setGrabbers.dimensions.y; y++) {
                 List<Direction> newDirecs = new List<Direction>();
-                if(x == 0) {
+                if (x == 0) {
                     newDirecs.Add(Direction.left);
-                } else if(x == setGrabbers.dimensions.x - 1) {
+                } else if (x == setGrabbers.dimensions.x - 1) {
                     newDirecs.Add(Direction.right);
                 }
 
-                if(y == 0) {
+                if (y == 0) {
                     newDirecs.Add(Direction.down);
-                } else if(y == setGrabbers.dimensions.y - 1) {
+                } else if (y == setGrabbers.dimensions.y - 1) {
                     newDirecs.Add(Direction.up);
                 }
 
-                if (newDirecs.Count == 0) { 
+                if (newDirecs.Count == 0) {
                     continue;
                 }
 

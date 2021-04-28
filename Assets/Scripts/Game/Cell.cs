@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class Cell : MonoBehaviour {
     public Building building;
@@ -9,8 +7,8 @@ public class Cell : MonoBehaviour {
     [SerializeField] SpriteRenderer debugVisual;
     [SerializeField] TextMesh positionDisplay;
 
-    [SerializeField] float scaleConst = 5f;    
-   public void Startup(Vector2Int pos, float cellSize) {
+    [SerializeField] float scaleConst = 5f;
+    public void Startup(Vector2Int pos, float cellSize) {
         transform.name = "cell " + Utils.Vector2IntToString(pos);
         this.pos = pos;
         debugVisual.transform.localScale = new Vector3(cellSize * scaleConst, cellSize * scaleConst, 1);
@@ -24,5 +22,5 @@ public class Cell : MonoBehaviour {
         positionDisplay.gameObject.SetActive(visible);
     }
 
-    
+
 }

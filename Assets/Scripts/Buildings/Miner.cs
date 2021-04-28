@@ -1,7 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-using System;
+﻿using UnityEngine;
 
 public class Miner : ProductionBuilding, ISelectItem {
     [SerializeField] Item spawnItem;
@@ -21,7 +18,7 @@ public class Miner : ProductionBuilding, ISelectItem {
             SpawnItem();
         } else {
             currProduction -= productionPerSec * Time.deltaTime;
-        } 
+        }
 
     }
 
@@ -33,14 +30,14 @@ public class Miner : ProductionBuilding, ISelectItem {
                 currProduction = spawnItem.productionCost;
                 Debug.Assert(currProduction > 0, "you need to set the production value of " + spawnItem);
             } else {
-            Destroy(item.gameObject);   
-            // throw new Exception("could not add " + item + "  to " + name);
+                Destroy(item.gameObject);
+                // throw new Exception("could not add " + item + "  to " + name);
             }
-        }  
+        }
     }
 
     public override Item ItemOut(Item filterItem) {
-        if(filterItem) {
+        if (filterItem) {
             return inventory.GetItem(filterItem);
         } else {
             return inventory.GetFirstItem();
@@ -48,7 +45,7 @@ public class Miner : ProductionBuilding, ISelectItem {
     }
 
     public override bool ItemOutValid(Item filterItem) {
-        if(filterItem) {
+        if (filterItem) {
             return inventory.HasItem(filterItem);
         } else {
             return inventory.GetFirstItem() != null;

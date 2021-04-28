@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class Grid : Singleton<Grid> {
     public int width;
@@ -14,31 +12,31 @@ public class Grid : Singleton<Grid> {
     private Cell[,] grid;
 
     private void Awake() {
-        width = (int) (floor.localScale.x / cellSize);
-        height =(int) (floor.localScale.z / cellSize);
+        width = (int)(floor.localScale.x / cellSize);
+        height = (int)(floor.localScale.z / cellSize);
 
         grid = new Cell[width, height];
-        for(int x  = 0; x < grid.GetLength(0); x++) {
+        for (int x = 0; x < grid.GetLength(0); x++) {
             Transform parent = Instantiate(gridParentPrefab, Vector3.zero, Quaternion.identity, transform);
             parent.name = "grid parent " + x;
-            for(int y = 0; y < grid.GetLength(1); y++) {
-               Cell temp = Instantiate(cellPrefab, WorldPos(x, y), Quaternion.identity, parent);
+            for (int y = 0; y < grid.GetLength(1); y++) {
+                Cell temp = Instantiate(cellPrefab, WorldPos(x, y), Quaternion.identity, parent);
                 grid[x, y] = temp;
-                temp.Startup(new Vector2Int(x,y), cellSize);
+                temp.Startup(new Vector2Int(x, y), cellSize);
                 temp.ShowDebug(GlobalPointers.showDebug);
             }
         }
     }
 
     private Vector3 WorldPos(int x, int y) {
-        return new Vector3(x * cellSize + cellSize/2, floor.localScale.y / 2, y * cellSize + cellSize / 2);
+        return new Vector3(x * cellSize + cellSize / 2, floor.localScale.y / 2, y * cellSize + cellSize / 2);
     }
     public Vector2Int CellNum(Vector3 worldPos) {
-        return new Vector2Int((int) (worldPos.x / cellSize), (int) (worldPos.z / cellSize));
+        return new Vector2Int((int)(worldPos.x / cellSize), (int)(worldPos.z / cellSize));
     }
 
     public Cell GetCell(int x, int y) {
-        return grid[x,y];
+        return grid[x, y];
     }
 
     public Cell GetCell(Vector2Int nums) {
@@ -48,9 +46,9 @@ public class Grid : Singleton<Grid> {
     public bool Placable(Vector2Int pos, Building building) {
         Vector2Int dimensions = building.dimensions;
         if (pos.x + dimensions.x >= width || pos.y + dimensions.y >= height) return false;
-        for(int x = pos.x; x < pos.x + dimensions.x; x++) {
+        for (int x = pos.x; x < pos.x + dimensions.x; x++) {
             for (int y = pos.y; y < pos.y + dimensions.y; y++) {
-                if (GetCell(x, y).building && GetCell(x,y).building != building) return false;
+                if (GetCell(x, y).building && GetCell(x, y).building != building) return false;
             }
         }
         return true;

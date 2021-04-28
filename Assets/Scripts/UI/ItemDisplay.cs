@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -9,7 +7,7 @@ public class ItemDisplay : MonoBehaviour {
     [SerializeField] Button button;
     Item item;
 
-   public void SetItemDisplay(Item item) {
+    public void SetItemDisplay(Item item) {
         this.item = item;
         image.sprite = item.sprite;
         text.text = item.itemName;

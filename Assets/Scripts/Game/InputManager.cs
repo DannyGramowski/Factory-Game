@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class InputManager : Singleton<InputManager> {
     public Building placingBuilding;
@@ -27,7 +25,7 @@ public class InputManager : Singleton<InputManager> {
     }
 
     private void KeyBoardInput() {
-        if(Input.GetKeyDown(KeyCode.R) && placingBuilding) {
+        if (Input.GetKeyDown(KeyCode.R) && placingBuilding) {
             buildingRot = placingBuilding.Rotate(buildingRot);
         } else if (Input.GetKeyDown(KeyCode.Escape)) {
             if (placingBuilding) {
@@ -42,14 +40,14 @@ public class InputManager : Singleton<InputManager> {
     }
 
     private void MouseInput() {
-        if(placingBuilding && currHover) {
+        if (placingBuilding && currHover) {
             if (placingBuilding is Grabber) {//grabber placing
                 Grabber g = placingBuilding as Grabber;
                 if (Input.GetMouseButtonDown(0)) {
                     AddGrabber();
-                } 
-                    g.SetModel(currHover);
-               
+                }
+                g.SetModel(currHover);
+
             } else if (Input.GetMouseButton(0) && placingBuilding && currHover && grid.Placable(currHover, placingBuilding)) {//everything else
                 Building temp = Instantiate(placingBuilding, GlobalPointers.buildingParent);
 
@@ -59,10 +57,10 @@ public class InputManager : Singleton<InputManager> {
 
                 CheckBeltSystem(temp);//check belts
             }
-        } else if(Input.GetMouseButtonDown(0)) {
+        } else if (Input.GetMouseButtonDown(0)) {
             SelectBuilding();
             ISelectItem selectItem = selection as ISelectItem;
-            if(selectItem != null) {
+            if (selectItem != null) {
                 UIManager.Instance.SetUI(selectItem);
             }
         }
@@ -95,28 +93,28 @@ public class InputManager : Singleton<InputManager> {
         Belt b = building as Belt;
         if (b) {
             bool addedBelt = false;
-                Vector2Int forwardCell = Utils.Vector2FromDirection(b.direction) + currHover.pos;
-                if (validCell(forwardCell)) {
+            Vector2Int forwardCell = Utils.Vector2FromDirection(b.direction) + currHover.pos;
+            if (validCell(forwardCell)) {
                 Cell cell = grid.GetCell(forwardCell);
                 Belt belt = cell.building as Belt;
-                    if (CheckBeltConnected(
-                        currHover,cell) 
-                   && belt.beltSystem.belts[0].Equals(belt)
-                    ) { //to only add a belt infront if it is adding to the first belt
-                        belt.beltSystem.AddBelt(b, true);
-                        addedBelt = true;
-                    }
+                if (CheckBeltConnected(
+                    currHover, cell)
+               && belt.beltSystem.belts[0].Equals(belt)
+                ) { //to only add a belt infront if it is adding to the first belt
+                    belt.beltSystem.AddBelt(b, true);
+                    addedBelt = true;
                 }
+            }
 
-            addedBelt |=  AddToBeltSystem(90, b);
+            addedBelt |= AddToBeltSystem(90, b);
             addedBelt |= AddToBeltSystem(180, b);
             addedBelt |= AddToBeltSystem(270, b);
 
             if (!addedBelt) {
-                BeltSystem temp = Instantiate(beltSystemPrefab,GlobalPointers.buildingParent);
+                BeltSystem temp = Instantiate(beltSystemPrefab, GlobalPointers.buildingParent);
                 temp.AddBelt(b, false);
                 temp.SetShowDebug(showDebug);
-                
+
             }
             return true;
         } else {
@@ -130,16 +128,16 @@ public class InputManager : Singleton<InputManager> {
         Vector2Int testCell = addedPos + currHover.pos;
 
         if (validCell(testCell)) {
-                if (CheckBeltConnected(grid.GetCell(testCell), currHover)) {
-                    BeltSystem beltSystem = (grid.GetCell(testCell).building as Belt).beltSystem;
-                    if (b.beltSystem && !(beltSystem.Equals(b.beltSystem))) {
-                        beltSystem.CombineBelt(b.beltSystem);
-                    } else if(!(beltSystem.Equals(b.beltSystem))){
-                        beltSystem.AddBelt(b, false);
-                    }
-                    return true;
+            if (CheckBeltConnected(grid.GetCell(testCell), currHover)) {
+                BeltSystem beltSystem = (grid.GetCell(testCell).building as Belt).beltSystem;
+                if (b.beltSystem && !(beltSystem.Equals(b.beltSystem))) {
+                    beltSystem.CombineBelt(b.beltSystem);
+                } else if (!(beltSystem.Equals(b.beltSystem))) {
+                    beltSystem.AddBelt(b, false);
                 }
-         
+                return true;
+            }
+
         }
         return false;
     }
@@ -159,7 +157,7 @@ public class InputManager : Singleton<InputManager> {
     private void AddGrabber() {
         Grabber g = placingBuilding as Grabber;
         Building hoverBuilding = currHover.building;
-        
+
         if (hoverBuilding is ProductionBuilding) {
             if (!g.HasConnectedBuilding()) {
                 print($"connected building valid{g.ValidPlacment(currHover.pos)}");
@@ -183,7 +181,7 @@ public class InputManager : Singleton<InputManager> {
     }
 
     private bool validCell(Vector2Int pos) {
-            return !(pos.x > grid.width - 1 || pos.x < 0 || pos.y > grid.height - 1 || pos.y < 0);
+        return !(pos.x > grid.width - 1 || pos.x < 0 || pos.y > grid.height - 1 || pos.y < 0);
     }
 
     private void BuildingPos() {

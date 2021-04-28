@@ -1,5 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 
 public class BeltSystem : MonoBehaviour {
@@ -13,7 +12,7 @@ public class BeltSystem : MonoBehaviour {
     public void AddBelt(Belt b, bool front) {
         b.beltSystem = this;
         b.transform.parent = transform;
-        if(front) {
+        if (front) {
             belts.Insert(0, b);
         } else {
             belts.Add(b);
@@ -21,7 +20,7 @@ public class BeltSystem : MonoBehaviour {
     }
 
     public void CombineBelt(BeltSystem addedBelts) {
-        foreach(Belt b in addedBelts.belts) {
+        foreach (Belt b in addedBelts.belts) {
             AddBelt(b, false);
         }
         addedBelts.belts.Clear();
@@ -29,7 +28,7 @@ public class BeltSystem : MonoBehaviour {
     }
 
     public Belt NextBelt(Belt b) {
-        if(b.beltNum ==belts.Count - 1) {
+        if (b.beltNum == belts.Count - 1) {
             return GetBeltForward();
         }
         return belts[b.beltNum + 1];
@@ -38,17 +37,17 @@ public class BeltSystem : MonoBehaviour {
     //returns the belt infront of the last belt in the system
     public Belt GetBeltForward() {
         Belt b = belts[belts.Count - 1];
-        return Grid.Instance.GetCell( b.baseCell.pos + Utils.Vector2FromDirection(b.direction))?.building as Belt;
+        return Grid.Instance.GetCell(b.baseCell.pos + Utils.Vector2FromDirection(b.direction))?.building as Belt;
     }
-    
+
     public void SetShowDebug(bool visible) {
         showDebug = visible;
-    } 
+    }
 
     public int BeltNum(Belt b) {
         return belts.IndexOf(b);
     }
-   
+
     private void OnDrawGizmos() {
         if (showDebug && belts.Count > 0) {
             for (int i = 0; i < belts.Count - 1; i++) {

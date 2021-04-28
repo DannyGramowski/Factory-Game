@@ -1,7 +1,5 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
 using UnityEditor;
+using UnityEngine;
 
 [CustomEditor(typeof(SetUpGrabber))]
 public class SetUpGrabbersEditor : Editor {
@@ -9,7 +7,7 @@ public class SetUpGrabbersEditor : Editor {
         DrawDefaultInspector();
 
         SetUpGrabber setUp = (SetUpGrabber)target;
-        if(GUILayout.Button("generate grabbers")) {
+        if (GUILayout.Button("generate grabbers")) {
             setUp.GenerateGrabbers();
         }
     }

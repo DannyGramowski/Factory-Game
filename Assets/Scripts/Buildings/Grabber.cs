@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 [RequireComponent(typeof(Timer))]
@@ -33,12 +31,12 @@ public class Grabber : Building, ISelectItem {
         }
     }
     private void Update() {
-        UpdateItemLogic();  
+        UpdateItemLogic();
     }
 
     private void UpdateItemLogic() {
-       arrow.color =  movingItem != null ? Color.green : Color.red;
-        
+        arrow.color = movingItem != null ? Color.green : Color.red;
+
         if (movingItem) {
             if (timer.TimerDone()) {
                 timer.StartTimer();
@@ -74,7 +72,7 @@ public class Grabber : Building, ISelectItem {
     public void ResetModel() {
         model.localScale = modelLocalScale;
     }
-    
+
     public void SetModel(Cell currHover) {
         if (!EndPlaced()) {
             transform.position = currHover.itemPos;
@@ -91,7 +89,7 @@ public class Grabber : Building, ISelectItem {
             from = grabberSpot?.cell ?? currHover;
             to = connectedBelt?.baseCell ?? currHover;
         }
-       
+
         position.position = Vector3.Lerp(from.itemPos, to.itemPos, 0.5f);
         Vector2Int offSet = from.pos - to.pos;
         float angle = -Utils.Angle(offSet);
@@ -104,17 +102,17 @@ public class Grabber : Building, ISelectItem {
         if (!EndPlaced()) return true;//allows it to be placed if it does not have one end placed
         if (HasBothConnections()) return false;
 
-        Vector2Int placedPos = (Vector2Int) (connectedBelt?.baseCell?.pos ?? grabberSpot?.cell.pos);
+        Vector2Int placedPos = (Vector2Int)(connectedBelt?.baseCell?.pos ?? grabberSpot?.cell.pos);
         Vector2 offSet = (currHover - placedPos);
-        foreach(Direction direc in grabberSpot.directions) {
+        foreach (Direction direc in grabberSpot.directions) {
             Vector2 direcVector = Utils.Vector2FromDirection(direc);
-            if(direcVector.Equals(offSet.normalized)) {
+            if (direcVector.Equals(offSet.normalized)) {
                 return offSet.magnitude <= range;
             }
         }
         return false;
     }
-    
+
 
     public void AddBuilding(Cell clickedLoc, ProductionBuilding b, bool input) {
         endPlaced = true;
@@ -132,7 +130,7 @@ public class Grabber : Building, ISelectItem {
         connectedBelt = b;
         emptySpace.transform.position = b.itemPos;
         if (grabberSpot != null) {
-           timer.StartUp(timePerCell * Vector2Int.Distance(connectedBelt.baseCell.pos, grabberSpot.cell.pos));
+            timer.StartUp(timePerCell * Vector2Int.Distance(connectedBelt.baseCell.pos, grabberSpot.cell.pos));
         }
     }
 
@@ -156,8 +154,8 @@ public class Grabber : Building, ISelectItem {
 
     private void OnDrawGizmos() {//cyan for the input and magenta for the output
         if (showDebug) {
-          /*  Gizmos.color = Color.white;
-            Gizmos.DrawSphere(currHover.itemPos, 0.5f);*/
+            /*  Gizmos.color = Color.white;
+              Gizmos.DrawSphere(currHover.itemPos, 0.5f);*/
             if (HasConnectedBelt()) {
                 if (toBuilding) {
                     Gizmos.color = Color.cyan;
@@ -189,7 +187,7 @@ public class Grabber : Building, ISelectItem {
             Gizmos.color = Color.yellow;
             Gizmos.DrawCube(emptySpace.transform.position, Vector3.one * 0.25f);
 
-         
+
         }
     }
 
