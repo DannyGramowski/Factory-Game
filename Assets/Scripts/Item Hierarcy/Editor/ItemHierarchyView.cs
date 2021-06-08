@@ -1,3 +1,4 @@
+using Factory.Core;
 using System.Collections.Generic;
 using UnityEditor;
 using UnityEditor.Experimental.GraphView;

@@ -1,3 +1,4 @@
+using Factory.Core;
 using UnityEditor.Experimental.GraphView;
 
 public class ItemNode : Node {

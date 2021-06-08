@@ -1,3 +1,4 @@
+using Factory.Core;
 using UnityEditor;
 using UnityEngine;
 

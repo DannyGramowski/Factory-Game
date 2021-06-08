@@ -1,7 +1,10 @@
-﻿public enum Direction {
-    up = 0,
-    right = 90,
-    down = 180,
-    left = 270,
-    none = -1
+﻿namespace Factory.Core {
+
+    public enum Direction {
+        up = 0,
+        right = 90,
+        down = 180,
+        left = 270,
+        none = -1
+    }
 }

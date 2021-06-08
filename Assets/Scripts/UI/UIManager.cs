@@ -1,33 +1,55 @@
 using UnityEngine;
+using UnityEngine.UI;
+using System;
+using Factory.Core;
+using Factory.Buildings;
+using Factory.Saving;
 
-public class UIManager : Singleton<UIManager> {
+namespace Factory.UI {
+    public class UIManager : Singleton<UIManager> {
 
-    [SerializeField] RectTransform[] selectItemUIs;
-    [SerializeField] DisplayItemsUI itemDisplay;
-    ISelectItem building;
+        [SerializeField] RectTransform[] selectItemUIs;
+        [SerializeField] DisplayItemsUI itemDisplay;
+        [SerializeField] Button save;
+        [SerializeField] Button load;
+        ISelectableBuilding building;
 
+        private void Awake() {
+            Debug.Log(save);
+            save.
+                onClick.
+                AddListener(
+                delegate () { SaveObject(); });
+            load.onClick.AddListener(delegate () { SaveManager.LoadGame("test"); });
 
-    private void Awake() {
-        gameObject.SetActive(false);
-    }
+            gameObject.SetActive(false);
+        }
 
-    public void SetUI(ISelectItem selectItem) {
-        building = selectItem;
-        gameObject.SetActive(true);
-        for (int i = 0; i < selectItemUIs.Length; i++) {
-            if (selectItem.UINum() == i) {
-                selectItemUIs[i].gameObject.SetActive(true);
-            } else {
-                selectItemUIs[i].gameObject.SetActive(false);
+        private void SaveObject() {
+            Debug.Log(InputManager.Instance.selection);
+            if (InputManager.Instance.selection != null) {
+                SaveManager.Save(InputManager.Instance.selection.gameObject);
+                SaveManager.SaveGame("test");
             }
         }
 
-        itemDisplay.SetDisplayType(selectItem.ProducableBuildingsType());
-    }
+        public void SetUI(ISelectableBuilding selectItem) {
+            gameObject.SetActive(true);
+            building = selectItem;
+            for (int i = 0; i < selectItemUIs.Length; i++) {
+                if (selectItem.UINum() == i) {
+                    selectItemUIs[i].gameObject.SetActive(true);
+                } else {
+                    selectItemUIs[i].gameObject.SetActive(false);
+                }
+            }
 
-    public void SetBuildingItem(Item item) {
-        building.SetItem(item);
-        gameObject.SetActive(false);
-    }
+            itemDisplay.SetDisplayType(selectItem.ProducableBuildingsType());
+        }
 
+        public void SetBuildingItem(Item item) {
+            building.SetItem(item);
+            gameObject.SetActive(false);
+        }
+    }
 }

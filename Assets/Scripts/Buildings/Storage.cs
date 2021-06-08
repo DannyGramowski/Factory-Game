@@ -1,27 +1,31 @@
-﻿public class Storage : ProductionBuilding {
+﻿using Factory.Core;
 
-    public override bool ItemInValid(Item item) {
-        return inventory.HasSpace(item);
-    }
+namespace Factory.Buildings {
+    public class Storage : ProductionBuilding {
 
-    public override bool ItemOutValid(Item filterItem) {
-        return base.ItemOutValid(filterItem);
-    }
-
-    public override void ItemIn(Item item) {
-        inventory.AddItemToStack(item);
-    }
-
-    public override Item ItemOut(Item filterItem) {
-        if (filterItem) {
-            return inventory.GetItemStack(filterItem).GetItem();
+        public override bool ItemInValid(Item item) {
+            return inventory.HasSpace(item);
         }
-        Item item = inventory.GetFirstItem();
-        if (item) {
-            print("item out " + item);
-            return item;
-        } else {
-            return null;
+
+        public override bool ItemOutValid(Item filterItem) {
+            return base.ItemOutValid(filterItem);
+        }
+
+        public override void ItemIn(Item item) {
+            inventory.AddItemToStack(item);
+        }
+
+        public override Item ItemOut(Item filterItem) {
+            if (filterItem) {
+                return inventory.GetItemStack(filterItem).GetItem();
+            }
+            Item item = inventory.GetFirstItem();
+            if (item) {
+                print("item out " + item);
+                return item;
+            } else {
+                return null;
+            }
         }
     }
 }
