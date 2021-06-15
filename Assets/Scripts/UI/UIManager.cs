@@ -15,11 +15,7 @@ namespace Factory.UI {
         ISelectableBuilding building;
 
         private void Awake() {
-            Debug.Log(save);
-            save.
-                onClick.
-                AddListener(
-                delegate () { SaveObject(); });
+            save.onClick.AddListener(delegate () { SaveObject(); });
             load.onClick.AddListener(delegate () { SaveManager.LoadGame("test"); });
 
             gameObject.SetActive(false);

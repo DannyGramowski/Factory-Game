@@ -19,9 +19,9 @@ namespace Factory.Buildings {
             base.Awake();
         }
 
-        public override void Place() {
+        public override void Place(Direction direction) {
             SetUpGrabberSpots();
-            base.Place();
+            base.Place(direction);
         }
 
         private void SetUpGrabberSpots() {
@@ -86,7 +86,7 @@ namespace Factory.Buildings {
 
         public void SetGrabberCell(ProductionBuilding productionBuilding) {
             this.productionBuilding = productionBuilding;
-            cell = Core.Grid.Instance.GetCell(productionBuilding.baseCell.pos + offSet);
+            cell = Core.Grid.Instance.GetCell(productionBuilding.GetBaseCell().pos + offSet);
             for (int i = 0; i < directions.Count; i++) {
                 directions[i] = Utils.AddDirection(directions[i], productionBuilding.direction);
             }

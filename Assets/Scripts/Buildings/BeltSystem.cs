@@ -13,7 +13,7 @@ namespace Factory.Buildings {
         }
 
         public void AddBelt(Belt b, bool front) {
-            print("add to belt system " + namingNum);
+          //  print("add to belt system " + namingNum);
             b.beltSystem = this;
             b.transform.parent = transform;
             if (front) {
@@ -41,7 +41,7 @@ namespace Factory.Buildings {
         //returns the belt infront of the last belt in the system
         public Belt GetBeltForward() {
             Belt b = belts[belts.Count - 1];
-            return Core.Grid.Instance.GetCell(b.baseCell.pos + Utils.Vector2FromDirection(b.direction))?.building as Belt;
+            return Core.Grid.Instance.GetCell(b.GetBaseCell().pos + Utils.Vector2FromDirection(b.direction))?.building as Belt;
         }
 
         public void SetShowDebug(bool visible) {

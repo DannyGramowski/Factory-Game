@@ -7,7 +7,7 @@ namespace Factory.Buildings {
     [SelectionBase]
     public abstract class Building : MonoBehaviour {
         public Direction direction;
-        public Cell baseCell;
+        protected Cell baseCell;
         public Vector2Int dimensions;
         public int buildingType; //0-belt, 1-miner, 2-grabber, 3 storage
 
@@ -50,6 +50,7 @@ namespace Factory.Buildings {
         }
 
         public virtual void Deconstruct() {
+            ReduceNamingNum();
             Destroy(gameObject);
         }
 
@@ -61,7 +62,6 @@ namespace Factory.Buildings {
         }
 
         private void SetPlacedCells() {
-            print("set cells for " + name);
             for (int x = baseCell.pos.x; x < baseCell.pos.x + dimensions.x; x++) {
                 for (int y = baseCell.pos.y; y < baseCell.pos.y + dimensions.y; y++) {
                     placedCells.Add(Grid.Instance.GetCell(x, y));
@@ -73,16 +73,26 @@ namespace Factory.Buildings {
             }
         }
 
+        public Cell GetBaseCell() {
+            return baseCell;
+        }
+
         public virtual void OnHover(Cell hoverCell) {
+        //    print("on hover");
                 SetHoverPosition(hoverCell);
             
         }
 
-        public virtual void Place() {
-            direction = Utils.AngleToDirection(InputManager.Instance.buildingRot.y);
+        public virtual void Place(Direction direc) {
+            direction = direc; 
             SetPostion();
         }
 
-        public virtual bool BuildingPlaced() { return true; }
+        //if its true it sets placing building to a new one in input manager
+        public virtual bool BuildingPlaced() {
+            return true;
+        }
+
+        public virtual void CancelPlace(Cell currHover) { Deconstruct(); }
     }
 }

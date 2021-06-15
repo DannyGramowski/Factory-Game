@@ -317,15 +317,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   direction: 0
-  baseCell: {fileID: 0}
   dimensions: {x: 0, y: 0}
   buildingType: 1
   selected: 0
   name: Grabber
-  placedCells:
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
+  placedCells: []
   model: {fileID: 5467734446358455190}
   position: {fileID: 7889331982735197514}
   emptySpace: {fileID: 6422458446243119187}

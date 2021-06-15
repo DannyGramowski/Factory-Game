@@ -4,6 +4,7 @@ using UnityEngine;
 namespace Factory.Buildings {
     public class Belt : Building {
         public BeltSystem beltSystem;
+        public Grabber grabber;
         public Vector3 itemPos;
         public float speed;
         public int beltNum => beltSystem.BeltNum(this);
@@ -12,14 +13,15 @@ namespace Factory.Buildings {
             grid = Core.Grid.Instance;
         }
 
-        public override void Place() {
-            base.Place();
+        public override void Place(Direction direction) {
+            base.Place(direction);
             itemPos = Utils.Vector3SetY(transform.position, GlobalPointers.itemHeight);
             CheckBeltSystem();
         }
 
          bool CheckBeltSystem() {
                  bool addedBelt = false;
+           // print("check belt system " + baseCell + " direction " + direction + ".");
                  Vector2Int forwardCell = Utils.Vector2FromDirection(direction) + baseCell.pos;
                  if (validCell(forwardCell)) {
                      Cell cell = grid.GetCell(forwardCell);
@@ -55,10 +57,10 @@ namespace Factory.Buildings {
                     if (beltSystem && !(otherBeltSystem.Equals(beltSystem))) {
                         otherBeltSystem.CombineBeltSystems(beltSystem);
                     } else if (!(otherBeltSystem.Equals(beltSystem))) {
-                        print("added to belt system");
+              //          print("added to belt system");
                         otherBeltSystem.AddBelt(this, false);
                     }
-                    print("did nothing");
+             //       print("did nothing");
                     return true;
                 }
 
@@ -69,11 +71,11 @@ namespace Factory.Buildings {
         bool CheckBeltConnected(Cell to, Cell from) {
             Belt toBelt = to?.building as Belt;
             Belt fromBelt = from?.building as Belt;
-            print($"to belt {toBelt}, from belt {fromBelt} for {name}");
+          //  print($"to belt {toBelt}, from belt {fromBelt} for {name}");
             if (toBelt && fromBelt) {
                 Vector2Int checkPos = (Utils.Vector2FromDirection(toBelt.direction) + to.pos);
                 if (checkPos.Equals(from.pos)) {
-                    print("belt connected is true");
+             //       print("belt connected is true");
                     return true;
                 }
             }
