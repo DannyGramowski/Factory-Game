@@ -5,8 +5,7 @@ using Factory.UI;
 namespace Factory.Core {
 
     public class InputManager : Singleton<InputManager> {
-        public Building PlacingBuilding { get { return placingBuilding; }
-            set {
+        public Building PlacingBuilding { get { return placingBuilding; } set {
                 placingBuilding = value;
                 if (placingBuilding != null) {
                     placingBuilding.transform.eulerAngles = buildingRot;
@@ -52,8 +51,7 @@ namespace Factory.Core {
         }
 
         void BuildingPos() {
-            if (PlacingBuilding &&
-                Physics.Raycast(GlobalPointers.mainCamera.ScreenPointToRay(Input.mousePosition), out hit, layerMask)) {
+            if (PlacingBuilding && Physics.Raycast(GlobalPointers.mainCamera.ScreenPointToRay(Input.mousePosition), out hit, layerMask)) {
                 currHover = grid.GetCell(grid.CellNum(hit.point));
                 if (grid.Placable(currHover, PlacingBuilding)) {
                     PlacingBuilding.OnHover(currHover);
