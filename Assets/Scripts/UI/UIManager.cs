@@ -15,19 +15,19 @@ namespace Factory.UI {
         ISelectableBuilding building;
 
         private void Awake() {
-            save.onClick.AddListener(delegate () { SaveObject(); });
-            load.onClick.AddListener(delegate () { SaveManager.LoadGame("test"); });
+         //   save.onClick.AddListener(delegate () { SaveObject(); });
+           // load.onClick.AddListener(delegate () { SaveManager.LoadGame("test"); });
 
             gameObject.SetActive(false);
         }
 
-        private void SaveObject() {
+      /*  private void SaveObject() {
             Debug.Log(InputManager.Instance.selection);
             if (InputManager.Instance.selection != null) {
                 SaveManager.Save(InputManager.Instance.selection.gameObject);
                 SaveManager.SaveGame("test");
             }
-        }
+        }*/
 
         public void SetUI(ISelectableBuilding selectItem) {
             gameObject.SetActive(true);

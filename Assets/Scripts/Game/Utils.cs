@@ -6,6 +6,7 @@ namespace Factory.Core {
     public static class Utils {
         public static Vector3 rotate90Y = new Vector3(0, 90, 0);
         public static string ITEM_FOLDER_PATH => "Assets/Prefabs/Items";
+        public static int CHAR_TO_INT = 30;
         public static string Vector2IntToString(Vector2 vector2) {
             return "(" + (int)vector2.x + "," + (int)vector2.y + ")";
         }

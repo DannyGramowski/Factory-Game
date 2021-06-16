@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using Factory.Core;
+using Factory.Saving;
 
 namespace Factory.Buildings {
     public abstract class ProductionBuilding : Building {
@@ -84,6 +85,9 @@ namespace Factory.Buildings {
                 + offSet.ToString();
         }
 
+        public object Save() {
+            return null;
+        }
         public void SetGrabberCell(ProductionBuilding productionBuilding) {
             this.productionBuilding = productionBuilding;
             cell = Core.Grid.Instance.GetCell(productionBuilding.GetBaseCell().pos + offSet);

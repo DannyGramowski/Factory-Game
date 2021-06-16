@@ -5,7 +5,7 @@ using Factory.Saving;
 
 namespace Factory.Core {
 
-    public class Item : MonoBehaviour, ISavable {
+    public class Item : MonoBehaviour {
         public string itemName;
         public Sprite sprite;
         public int stackSize = 100;

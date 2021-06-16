@@ -1,11 +1,12 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 using Factory.Core;
+using Factory.Saving;
 using Grid = Factory.Core.Grid;
 
 namespace Factory.Buildings {
     [SelectionBase]
-    public abstract class Building : MonoBehaviour {
+    public abstract class Building : MonoBehaviour, ISaveable {
         public Direction direction;
         protected Cell baseCell;
         public Vector2Int dimensions;
@@ -94,5 +95,29 @@ namespace Factory.Buildings {
         }
 
         public virtual void CancelPlace(Cell currHover) { Deconstruct(); }
+
+        public object Save() {
+            Dictionary<string, object> dict = new Dictionary<string, object>();
+            dict["direc"] = direction;
+            dict["pos"] = baseCell.pos;
+            dict["type"] = buildingType;
+            OverrideSave(dict);
+            return dict;
+        }
+
+        protected virtual object OverrideSave(Dictionary<string, object> dict) {
+            return null;
+        }
+
+        public void Load(object state) {
+            Dictionary<string, object> dict = (Dictionary<string, object>)state;
+            OverrideLoad(state);
+        }
+
+        protected virtual void OverrideLoad(object state) { }
+
+        public SavingType SaveType() {
+            return SavingType.building;
+        }
     }
 }
