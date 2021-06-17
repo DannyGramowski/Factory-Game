@@ -20,14 +20,11 @@ namespace Factory.Buildings {
         bool toBuilding;//if true belt to building
         bool endPlaced = false;
 
-        //Building hoverBuilding;
-        //bool hoverOnBuilding = false;
-
         Item movingItem = null;
         Item filterItem;
 
         bool showDebug;
-        //Cell baseCell;
+      //  Collider collider;
         Building hoverBuilding;
 
         protected override void Awake() {
@@ -36,14 +33,14 @@ namespace Factory.Buildings {
             if (modelLocalScale.Equals(Vector3.zero)) {
                 modelLocalScale = new Vector3(model.transform.localScale.x, model.transform.localScale.y, model.transform.localScale.z);
             }
-
+            endPlaced = false;
             ResetModel();
         }
 
         private void Update() {
             UpdateItem();
         }
- 
+
         public bool HasConnectedBuilding() {
             return connectedBuilding != null;
         }
@@ -65,58 +62,35 @@ namespace Factory.Buildings {
         }
 
         public override void Place(Direction direc) {
-            if (hoverBuilding == null)
-                return;
+            if (hoverBuilding == null) return;
 
-            if (hoverBuilding is ProductionBuilding) {
-                if (!HasConnectedBuilding()) {
-                    //print($"connected building valid{ValidPlacment(currHover.pos)}");
-                    // print("cur hover pos " + baseCell.pos);
-                    if (ValidPlacment(baseCell.pos)) {
-                        AddBuilding(baseCell, hoverBuilding as ProductionBuilding, HasConnectedBelt());
-                    }
-                    //else    print("not valid placement");
-                }
-            } else if (hoverBuilding is Belt) {
+            if (ValidPlacment(baseCell.pos)) {
                 Belt belt = hoverBuilding as Belt;
-                if (!HasConnectedBelt()) {
-                    //    print($"connected belt valid{ValidPlacment(baseCell.pos)}");
-
-                    if (ValidPlacment(baseCell.pos) && belt.grabber == null) {
+                if (belt != null) {
+                    if (belt.grabber == null) {
                         AddBelt(belt, HasConnectedBuilding());
                     }
-                    //else print("not valid placment");
+                } else {
+                    AddBuilding(baseCell, hoverBuilding as ProductionBuilding, HasConnectedBelt());
                 }
+            }
+
+            if(BuildingPlaced()) {
+                timer.StartUp(timePerCell * (Vector2Int.Distance(connectedBelt.GetBaseCell().pos, grabberSpot.cell.pos)));
+                print("building placed");
             }
         }
 
         public override void OnHover(Cell hoverCell) {
+            if (baseCell == hoverCell)
+                return; //you dont need to update it if hover is the same
             //base.OnHover(hoverCell);
             baseCell = hoverCell;
             //print("on hover " + baseCell);
-            hoverBuilding = hoverCell.building;
-            SetModel(hoverCell);
-
-            //if(hoverBuilding == null) return;
-            /*
-                        if (hoverBuilding is ProductionBuilding) {
-                            if (!HasConnectedBuilding()) {
-                                //print($"connected building valid{ValidPlacment(currHover.pos)}");
-                               // print("cur hover pos " + baseCell.pos);
-                                if (ValidPlacment(baseCell.pos)) {
-                                    AddBuilding(baseCell, hoverBuilding as ProductionBuilding, HasConnectedBelt());
-                                } else print("not valid placement");
-                            }
-                        } else if (hoverBuilding is Belt) {
-                            if (!HasConnectedBelt()) {
-                            //    print($"connected belt valid{ValidPlacment(baseCell.pos)}");
-
-                                if (ValidPlacment(baseCell.pos))
-                                    AddBelt(hoverBuilding as Belt, HasConnectedBuilding());
-                                else
-                                    print("not valid placment");
-                            }
-                        }*/
+            if (ValidPlacment(hoverCell.pos)) {
+                hoverBuilding = hoverCell.building;
+                SetModel(hoverCell);
+            }
         }
 
         public override bool BuildingPlaced() {
@@ -187,14 +161,10 @@ namespace Factory.Buildings {
         }
 
         private void ResetModel() {
-            
             connectedBelt = null;
-            print("connected belt " + connectedBelt);
             connectedBuilding = null;
             grabberSpot = null;
             model.localScale = modelLocalScale;
-            print("reset model");
-
         }
 
         private void SetModel(Cell currHover) {
@@ -220,19 +190,51 @@ namespace Factory.Buildings {
             //print("angle " + angle);
             position.eulerAngles = Utils.Vector3SetY(transform.eulerAngles, angle);
             model.transform.localScale = new Vector3(modelLocalScale.x * offSet.magnitude, modelLocalScale.y, modelLocalScale.z * 0.6f);
+            GetComponent<BoxCollider>().size = new Vector3(modelLocalScale.x * offSet.magnitude, modelLocalScale.y, modelLocalScale.z * 0.6f);
+            GetComponent<BoxCollider>().center = position.localPosition;
         }
 
-        private bool ValidPlacment(Vector2 currHover) {
-            if (!EndPlaced())
-                return true;//allows it to be placed if it does not have one end placed
-            if (HasBothConnections())
-                return false;
+        private bool ValidPlacment(Vector2Int currHover) {
+            if (!EndPlaced()) {
+                print("no end placed");
+                return true; 
+            }//allows it to be placed if it does not have one end placed
 
-            Vector2Int placedPos = (Vector2Int)(connectedBelt?.GetBaseCell()?.pos ?? grabberSpot?.cell.pos);
-            Vector2 offSet = (currHover - placedPos);
-            foreach (Direction direc in grabberSpot.directions) {
+            if (HasBothConnections())return false;
+            Cell hover = Core.Grid.Instance.GetCell(currHover);
+            Building b = hover.building;
+            Vector2 buildingPos;
+            Vector2 beltPos;
+            GrabberSpot spot;
+
+            if (b == null) return false;
+
+            if (b is ProductionBuilding) {
+                ProductionBuilding production = b as ProductionBuilding;
+                GrabberSpot g = production.HasGrabberSpot(hover);
+
+                if (connectedBuilding != null || g == null || g.connectedGrabber != null)  return false;
+                buildingPos = g.cell.pos;
+                beltPos = connectedBelt.GetBaseCell().pos;
+                spot = g;
+            } else if (b is Belt) {
+                if (connectedBelt != null)
+                    return false;
+                Belt belt = b as Belt;
+
+                if (belt.grabber != null) return false;
+
+                buildingPos = grabberSpot.cell.pos;
+                beltPos = belt.GetBaseCell().pos;
+                spot = grabberSpot;
+            } else {
+                return false;
+            }
+
+            Vector2 offSet = beltPos - buildingPos;
+            foreach (Direction direc in spot.directions) {
                 Vector2 direcVector = Utils.Vector2FromDirection(direc);
-                if (direcVector.Equals(offSet.normalized)) {
+                if (offSet.normalized.Equals(direcVector)) {
                     return offSet.magnitude <= range;
                 }
             }
@@ -240,13 +242,16 @@ namespace Factory.Buildings {
         }
 
         private void AddBuilding(Cell clickedLoc, ProductionBuilding b, bool input) {
-            endPlaced = true;
+            print("add building");
             connectedBuilding = b;
-            toBuilding = input;
             grabberSpot = connectedBuilding.AddGrabber(clickedLoc, this, input);
-            if (grabberSpot != null && connectedBelt) {
-                emptySpace.transform.position = connectedBelt.itemPos;
-                timer.StartUp(timePerCell * (Vector2Int.Distance(connectedBelt.GetBaseCell().pos, grabberSpot.cell.pos)));
+            if (grabberSpot != null) {
+                print("placed building");
+                endPlaced = true;
+                toBuilding = input;
+            } else {
+                connectedBuilding = null;//if there is no valid grabber it will not allow it to be placed
+                grabberSpot = null;
             }
         }
 
@@ -255,9 +260,6 @@ namespace Factory.Buildings {
             connectedBelt = b;
             b.grabber = this;
             emptySpace.transform.position = b.itemPos;
-            if (grabberSpot != null) {
-                timer.StartUp(timePerCell * Vector2Int.Distance(connectedBelt.GetBaseCell().pos, grabberSpot.cell.pos));
-            }
         }
 
         private void OnDrawGizmos() {//cyan for the input and magenta for the output
@@ -279,9 +281,7 @@ namespace Factory.Buildings {
                     } else {
                         Gizmos.color = Color.cyan;
                     }
-                    Gizmos.DrawCube(grabberSpot.
-                        cell.
-                        itemPos, Vector3.one * 0.5f);
+                    Gizmos.DrawCube(grabberSpot.cell.itemPos, Vector3.one * 0.5f);
                 }
 
                 if (HasBothConnections()) {
@@ -301,27 +301,3 @@ namespace Factory.Buildings {
     }
 }
 
-//void AddGrabber() {
-/*   Building hoverBuilding = currHover.building;
-
-   if (hoverBuilding is ProductionBuilding) {
-       if (!g.HasConnectedBuilding()) {
-           print($"connected building valid{g.ValidPlacment(currHover.pos)}");
-           if (g.ValidPlacment(currHover.pos)) g.AddBuilding(currHover, hoverBuilding as ProductionBuilding, g.HasConnectedBelt());
-           else print("not valid placement");
-       }
-   } else if (hoverBuilding is Belt) {
-       if (!g.HasConnectedBelt()) {
-           print($"connected belt valid{g.ValidPlacment(currHover.pos)}");
-
-           if (g.ValidPlacment(currHover.pos)) g.AddBelt(hoverBuilding as Belt, g.HasConnectedBuilding());
-           else print("not valid placment");
-       }
-   }*/
-
-/*  if (g.HasBothConnections()) {
-      placingBuilding = Instantiate(placingBuilding, GlobalPointers.buildingParent);
-      (placingBuilding as Grabber).ResetModel();
-      placingBuilding.SetShowDebug(GlobalPointers.showDebug);
-  }*/
-//}

@@ -60,38 +60,34 @@ namespace Factory.Core {
         }
 
         private void MouseInput() {
-            /*if (placingBuilding && currHover) {
-                placingBuilding.OnHover(currHover);
-            }*/
-
             if (Input.GetMouseButton(0)) {
                 if (PlacingBuilding && currHover && grid.Placable(currHover, PlacingBuilding)) {
                     PlacingBuilding.Place(Utils.AngleToDirection(buildingRot.y));
                     if (PlacingBuilding.BuildingPlaced()) {
-                        //lacingBuilding.IncreaseNamingNum();
-                        //print("created new building");
                         PlacingBuilding = Instantiate(GlobalPointers.buildingPrefabs[PlacingBuilding.buildingType], currHover.transform.position, Quaternion.Euler(buildingRot), GlobalPointers.buildingParent);
                     }
-                } else {
+                } else if(Input.GetMouseButtonDown(0)) {
                     SelectBuilding();
                 }
             }
-
-         
         }
-            void SelectBuilding() {
-                if (Physics.Raycast(GlobalPointers.mainCamera.ScreenPointToRay(Input.mousePosition), out hit)) {
-                    selection = hit.transform.GetComponent<Building>();
-                    if (oldSelection != null) { // reset material to default
-                        Unselect();
-                    }
 
-                    if (selection != null) {
-                        Select(); // do stuff with selected object
-                        oldSelection = selection;
-                    }
+        void SelectBuilding() {
+        // print("select building");
+            if (Physics.Raycast(GlobalPointers.mainCamera.ScreenPointToRay(Input.mousePosition), out hit)) {
+
+                selection = hit.transform.GetComponent<Building>();
+
+                if (oldSelection != null) { 
+                    Unselect();
+                }
+
+                if (selection != null) {
+                    Select(); 
+                    oldSelection = selection;
                 }
             }
+        }
 
             void Unselect() {
                 oldSelection.selected = false;
@@ -100,12 +96,8 @@ namespace Factory.Core {
 
             void Select() {
                 selection.selected = true;
+                UIManager.Instance.SetUI(selection as ISelectableBuilding);
             }
-
-
-
-           
-
         }
     }
 

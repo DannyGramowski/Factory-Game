@@ -30,6 +30,8 @@ namespace Factory.UI {
         }*/
 
         public void SetUI(ISelectableBuilding selectItem) {
+            if (selectItem == null) return;
+            print("set UI for " + (selectItem as Building).name);
             gameObject.SetActive(true);
             building = selectItem;
             for (int i = 0; i < selectItemUIs.Length; i++) {

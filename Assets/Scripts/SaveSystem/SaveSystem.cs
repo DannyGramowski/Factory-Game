@@ -12,8 +12,8 @@ namespace Factory.Saving {
     public class SaveSystem : Singleton<SaveSystem> {
         public static readonly string SAVE_PATH = Application.dataPath + "/saves";
 
-
-        Dictionary<string, object>[] saveTypes = new Dictionary<string, object>[Enum.GetValues(typeof(SavingType)).Cast<int>().Last()];
+      //  Dictionary<string, object>[] saveTypes = new Dictionary<string, object>[Enum.GetValues(typeof(SavingType)).Cast<int>().Last()];
+        Dictionary<string, object>[] saveTypes;
 
         private void Awake() {
             for(int i = 0; i < saveTypes.Length; i++) {
@@ -28,21 +28,19 @@ namespace Factory.Saving {
            
         }
 
-
-
         public void Load(string saveFile) {
             RestoreState(LoadFile(saveFile));
 
         }
 
         private void RestoreState(Dictionary<string, object>[] state) {
-         /*   saveTypes = state;
+            saveTypes = state;
             foreach (SavingEntity saveable in GameObject.FindObjectsOfType<SavingEntity>()) {
                 string id = saveable.GetUniqueIdentifier();
-                if (saveTypes(id)) {
-                    saveable.RestoreState(stateDict[id]);
+                if (saveTypes[0].ContainsKey(id)) {
+                    saveable.RestoreState(saveTypes[0][id]);
                 }
-            }*/
+            }
         }
 
         private int GetIndex(string value) {
@@ -51,9 +49,9 @@ namespace Factory.Saving {
 
         public Dictionary<string, object>[] LoadFile(string saveFile) {
             string path = GetPathFromSaveFile(saveFile);
-//            if (!File.Exists(path)) {
-       //         return new Dictionary<string, object>()[ ];
-         //   }*/
+            if (!File.Exists(path)) {
+                return new Dictionary<string, object>[Enum.GetValues(typeof(SavingType)).Cast<int>().Last()];
+            }
 
             using (FileStream stream = File.Open(path, FileMode.Open)) {
                 BinaryFormatter formatter = new BinaryFormatter();

@@ -43,7 +43,6 @@ GameObject:
   - component: {fileID: 5467734446358455190}
   - component: {fileID: 8578609760941515992}
   - component: {fileID: 784412975942126059}
-  - component: {fileID: 715332458344546837}
   m_Layer: 0
   m_Name: model
   m_TagString: Untagged
@@ -115,19 +114,6 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!65 &715332458344546837
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3207789397818867140}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Size: {x: 1, y: 1, z: 1}
-  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &3259172771304064707
 GameObject:
   m_ObjectHideFlags: 0
@@ -281,6 +267,7 @@ GameObject:
   - component: {fileID: 5666373987120226651}
   - component: {fileID: 1053517709821152982}
   - component: {fileID: 4371929058596897712}
+  - component: {fileID: 7660859200669871252}
   m_Layer: 0
   m_Name: Grabber
   m_TagString: Untagged
@@ -340,3 +327,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cdf686c3f932a0a4b82c0c04e9390fbd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!65 &7660859200669871252
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6672373633600945287}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 1.5, y: 0.42, z: 1.5}
+  m_Center: {x: 0, y: 0, z: 0}
