@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using Factory.Buildings;
 using Factory.UI;
+using Factory.Saving;
 
 namespace Factory.Core {
 
@@ -46,6 +47,8 @@ namespace Factory.Core {
                 } else {
                     UIManager.Instance.gameObject.SetActive(false);
                 }
+            } else if(Input.GetKeyDown(KeyCode.L)) {
+                SaveSystem.Instance.Save();
             }
 
         }

@@ -2,10 +2,11 @@
 using UnityEngine;
 using Factory.Core;
 using Factory.Saving;
+using System.Linq;
 using Grid = Factory.Core.Grid;
 
 namespace Factory.Buildings {
-    [SelectionBase]
+    [SelectionBase] [RequireComponent(typeof(SavingEntity))]
     public abstract class Building : MonoBehaviour, ISaveable {
         public Direction direction;
         protected Cell baseCell;
@@ -31,7 +32,7 @@ namespace Factory.Buildings {
         public Vector3 Rotate(Vector3 buildingRot) {
             dimensions = Utils.SwapVector2(dimensions);
             SetLocation();
-            buildingRot += Utils.rotate90Y;
+            buildingRot += Utils.ROTATE90Y;
             transform.eulerAngles = buildingRot;
             return buildingRot;
         }
@@ -89,18 +90,22 @@ namespace Factory.Buildings {
             SetPostion();
         }
 
-        //if its true it sets placing building to a new one in input manager
+        //if its true it sets placing building to a new one in input manager and allows it to be saved
         public virtual bool BuildingPlaced() {
-            return true;
+            return baseCell != null;
         }
 
         public virtual void CancelPlace(Cell currHover) { Deconstruct(); }
 
         public object Save() {
+            if (!BuildingPlaced()) return null;
+
             Dictionary<string, object> dict = new Dictionary<string, object>();
+            print("saved " + name + " with type " + buildingType);
             dict["direc"] = direction;
-            dict["pos"] = baseCell.pos;
+            dict["pos"] =  new SVector2(baseCell.pos);
             dict["type"] = buildingType;
+
             OverrideSave(dict);
             return dict;
         }
@@ -110,7 +115,9 @@ namespace Factory.Buildings {
         }
 
         public void Load(object state) {
-            Dictionary<string, object> dict = (Dictionary<string, object>)state;
+            if (namingNums.Sum() != 0) namingNums = new int[GlobalPointers.buildingPrefabs.Length];
+            print(name + " state " + state + " is type " + state.GetType());
+            Dictionary<string, object> dict = ((((KeyValuePair<string, object>)state).Value) as Dictionary<string, object>);
             OverrideLoad(state);
         }
 

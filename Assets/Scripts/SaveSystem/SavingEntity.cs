@@ -9,21 +9,38 @@ namespace Factory.Saving {
 
         [ExecuteAlways]
             [SerializeField] string uniqueIdentifier = "";
-            static Dictionary<string, SavingEntity> globalLookup = new Dictionary<string, SavingEntity>();
+            public static Dictionary<string, SavingEntity> globalLookup = new Dictionary<string, SavingEntity>();
 
-            public string GetUniqueIdentifier() {
-                return uniqueIdentifier;
+        private void Awake() {
+            if (string.IsNullOrEmpty(uniqueIdentifier) || IsUnique(uniqueIdentifier)) {
+                uniqueIdentifier = Guid.NewGuid().ToString();
+                globalLookup[uniqueIdentifier] = this;
             }
+        }
+
+        private void OnDestroy() {
+            globalLookup.Remove(uniqueIdentifier);
+        }
+
+        public string GetUniqueIdentifier() {
+                return uniqueIdentifier;
+        }
+
+        public void SetUniqueIdentifier(string guid) {
+            uniqueIdentifier = guid;
+        }
 
             public Dictionary<string, object> CaptureState() {
                 Dictionary<string, object> state = new Dictionary<string, object>();
+
                 foreach (ISaveable save in GetComponents<ISaveable>()) {
                     state[((int)(save.SaveType())).ToString() + save.GetType().ToString()] = save.Save();//number is to add to different lists
                 }
                 return state;
             }
 
-            public void RestoreState(object state) {
+            public void RestoreState(string guid, object state) {
+            uniqueIdentifier = guid;
                 Dictionary<string, object> stateDict = (Dictionary<string, object>)state;
                 foreach (ISaveable save in GetComponents<ISaveable>()) {
                     string typeString = ((int)(save.SaveType())).ToString() + save.GetType().ToString();

@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 3899194813947211337}
   - component: {fileID: 3899194813947211336}
   - component: {fileID: 6145346476979189315}
+  - component: {fileID: 6775298915955642683}
   m_Layer: 0
   m_Name: Assembler
   m_TagString: Untagged
@@ -46,19 +47,17 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   direction: 0
-  baseCell: {fileID: 0}
   dimensions: {x: 3, y: 3}
   buildingType: 4
   selected: 0
   name: Assembler
   placedCells: []
-  NotGrabberSpots: 1
   grabberSpots:
   - offSet: {x: 1, y: 1}
     cell: {fileID: 0}
     spotType: 0
     connectedGrabber: {fileID: 0}
-    direction: 0
+    directions: 
   inventory:
     inventory: []
     maxStacks: 0
@@ -77,6 +76,19 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 4.5, y: 0.7438667, z: 4.5}
   m_Center: {x: 0, y: 0.38193333, z: 0}
+--- !u!114 &6775298915955642683
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3899194813947211338}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7e4539a36f0b1cd43928f8f0b392b681, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  uniqueIdentifier: 
 --- !u!1 &3899194814511075843
 GameObject:
   m_ObjectHideFlags: 0

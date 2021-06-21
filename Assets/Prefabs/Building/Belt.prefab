@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 6364459235954067393}
   - component: {fileID: 2278762276439751666}
+  - component: {fileID: 7832579270285576816}
   m_Layer: 0
   m_Name: Belt
   m_TagString: Untagged
@@ -46,14 +47,28 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   direction: 0
-  baseCell: {fileID: 0}
   dimensions: {x: 1, y: 1}
   buildingType: 0
+  selected: 0
   name: Belt
   placedCells: []
   beltSystem: {fileID: 0}
+  grabber: {fileID: 0}
   itemPos: {x: 0, y: 0, z: 0}
   speed: 10
+--- !u!114 &7832579270285576816
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 53679722389322970}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7e4539a36f0b1cd43928f8f0b392b681, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  uniqueIdentifier: 
 --- !u!1 &5628460939663579242
 GameObject:
   m_ObjectHideFlags: 0

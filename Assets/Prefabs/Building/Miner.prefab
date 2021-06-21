@@ -176,6 +176,7 @@ GameObject:
   - component: {fileID: 1428323416386388767}
   - component: {fileID: 1428323416386388762}
   - component: {fileID: 5843294589385708152}
+  - component: {fileID: 7705465767146344029}
   m_Layer: 0
   m_Name: Miner
   m_TagString: Untagged
@@ -211,13 +212,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   direction: 0
-  baseCell: {fileID: 0}
   dimensions: {x: 3, y: 3}
   buildingType: 2
   selected: 0
   name: Miner
   placedCells: []
-  NotGrabberSpots: 0
   grabberSpots:
   - offSet: {x: 0, y: 0}
     cell: {fileID: 0}
@@ -278,3 +277,16 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 1.3915625, y: 0.8640919, z: 1.4612195}
   m_Center: {x: -0.00213341, y: 0.48373887, z: -0.010736209}
+--- !u!114 &7705465767146344029
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1428323416386388763}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7e4539a36f0b1cd43928f8f0b392b681, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  uniqueIdentifier: 
