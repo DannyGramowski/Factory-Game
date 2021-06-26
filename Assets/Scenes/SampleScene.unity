@@ -4532,7 +4532,7 @@ MonoBehaviour:
   setGrabbers: {fileID: 6150866104537761473, guid: d41ea341cc120a1479e04efce0ce0221, type: 3}
   producableBuildings: 2
   ioType: 0
-  generationType: 1
+  generationType: 0
 --- !u!4 &2024652802
 Transform:
   m_ObjectHideFlags: 0

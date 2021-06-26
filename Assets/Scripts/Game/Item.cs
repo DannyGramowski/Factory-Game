@@ -16,8 +16,6 @@ namespace Factory.Core {
         public ProducableBuildings producableBuilding;
         public List<Item> recipe;
 
-        public ItemSaveData saveData;
-
         BeltSystem beltSystem;
         Belt nextBelt;
         Belt currBelt;
@@ -25,6 +23,19 @@ namespace Factory.Core {
         float time;
         bool onBelt;
         bool moving;
+
+        public static Item SpawnItem(int index) {
+            return SpawnItem(index, Vector3.zero);
+        }
+
+        public static Item SpawnItem(int index, Vector3 position) {
+            return index != -1 ? Instantiate(GlobalPointers.itemPrefabs[index], GlobalPointers.ItemParent) : null;
+        }
+
+        public static int ItemIndex(Item item) {
+            return GlobalPointers.itemPrefabs.IndexOf(item);
+        }
+
         private void FixedUpdate() {
             if (onBelt && moving && nextBelt) {
                 time += Time.deltaTime;
@@ -54,8 +65,8 @@ namespace Factory.Core {
         }
 
         public override bool Equals(object other) {
-            Debug.Assert(itemName != null, "you need to give " + name + " an item name");
-            Debug.Assert((other as Item).itemName != null, "you need to give " + (other as Item).name + " an item name");
+            //Debug.Assert(itemName != null, "you need to give " + name + " an item name");
+          //  Debug.Assert((other as Item).itemName != null, "you need to give " + (other as Item).name + " an item name");
             if (!(other is Item)) return false;
             return itemName.Equals((other as Item).itemName);
         }
@@ -89,18 +100,6 @@ namespace Factory.Core {
 
         public void Activate() {
             gameObject.SetActive(true);
-        }
-
-        public struct ItemSaveData {
-
-        }
-
-        public void Save() {
-
-        }
-
-        public void Load() {
-
         }
     }
 

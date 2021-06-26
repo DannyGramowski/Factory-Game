@@ -1,4 +1,5 @@
 ﻿using Factory.Core;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace Factory.Buildings {
@@ -7,9 +8,6 @@ namespace Factory.Buildings {
         [SerializeField] float productionPerSec;
 
         float currProduction;
-        /*protected override void Awake() {
-            base.Awake();
-        }*/
 
         private void Update() {
             if (currProduction <= 0) {
@@ -29,7 +27,6 @@ namespace Factory.Buildings {
                     Debug.Assert(currProduction > 0, "you need to set the production value of " + spawnItem);
                 } else {
                     Destroy(item.gameObject);
-                    // throw new Exception("could not add " + item + "  to " + name);
                 }
             }
         }
@@ -62,8 +59,18 @@ namespace Factory.Buildings {
             spawnItem = item;
         }
 
+        protected override void OverrideLoad(Dictionary<string, object> dict) {
+            int itemNum = (int) dict["item num"];
+            spawnItem = itemNum != -1 ? GlobalPointers.itemPrefabs[itemNum] : null;
+            currProduction = (float) dict["curr production"];
+            base.OverrideLoad(dict);
+        }
 
-
+        protected override void OverrideSave(Dictionary<string, object> dict) {
+            dict["item num"] = GlobalPointers.itemPrefabs.IndexOf(spawnItem);
+            dict["curr production"] = currProduction;
+            base.OverrideSave(dict);
+        }
         /* private void OnDrawGizmos() {
              if (baseCell) {
                  Vector3 pos = Grid.Instance.GetCell(baseCell.pos + Vector2Int.one + (Utils.Vector2FromDirection(direction) * 2)).transform.position;

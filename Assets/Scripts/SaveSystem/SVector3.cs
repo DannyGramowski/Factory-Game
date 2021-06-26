@@ -12,6 +12,12 @@ namespace Factory.Saving {
             z = vector.z;
         }
 
+        public SVector3(float x1, float y1, float z1) {
+            x = x1;
+            y = y1;
+            z = z1;
+        }
+
         public Vector3 ToVector() {
             return new Vector3(x, y, z);
         }

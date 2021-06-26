@@ -25,6 +25,16 @@ namespace Factory.Buildings {
             base.Place(direction);
         }
 
+        protected override void OverrideLoad(Dictionary<string, object> dict) {
+            inventory.Load(dict["buildingInventory"]);
+            base.OverrideLoad(dict);
+        }
+
+        protected override void OverrideSave(Dictionary<string, object> dict) {
+            dict["buildingInventory"] = inventory.Save();
+            base.OverrideSave(dict);
+        }
+
         private void SetUpGrabberSpots() {
             foreach (GrabberSpot g in grabberSpots) {
                 g.SetGrabberCell(this);

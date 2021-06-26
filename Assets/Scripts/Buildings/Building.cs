@@ -7,7 +7,7 @@ using Grid = Factory.Core.Grid;
 
 namespace Factory.Buildings {
     [SelectionBase] [RequireComponent(typeof(SavingEntity))]
-    public abstract class Building : MonoBehaviour, ISaveable {
+    public abstract class Building : MonoBehaviour, ISaveable, IOrderable {
         public Direction direction;
         protected Cell baseCell;
         public Vector2Int dimensions;
@@ -17,16 +17,12 @@ namespace Factory.Buildings {
 
         [SerializeField] new string name;
         [SerializeField] List<Cell> placedCells;
+        [SerializeField] int savePriority = 5;
 
         static int[] namingNums;
 
         protected virtual void Awake() {
-            if (namingNums == null) {
-                namingNums = new int[GlobalPointers.buildingPrefabs.Length];
-            } 
-             namingNums[buildingType]++;
-            
-            transform.name = name + namingNums[buildingType];
+            SetName();
         }
 
         public Vector3 Rotate(Vector3 buildingRot) {
@@ -58,6 +54,16 @@ namespace Factory.Buildings {
 
         public virtual void SetShowDebug(bool showDebug) { }
 
+        private void SetName() {
+            if (namingNums == null) {
+                namingNums = new int[GlobalPointers.buildingPrefabs.Length];
+            }
+
+            namingNums[buildingType]++;
+
+            transform.name = name + namingNums[buildingType];
+        }
+
         private void SetLocation() {
             Vector3 addedPos = new Vector3((Grid.Instance.GetCellScale().x * (dimensions.x - 1)) / 2, 0, (Grid.Instance.GetCellScale().y * (dimensions.y - 1)) / 2);
             transform.position = baseCell.transform.position + addedPos;
@@ -80,7 +86,6 @@ namespace Factory.Buildings {
         }
 
         public virtual void OnHover(Cell hoverCell) {
-        //    print("on hover");
                 SetHoverPosition(hoverCell);
             
         }
@@ -88,6 +93,7 @@ namespace Factory.Buildings {
         public virtual void Place(Direction direc) {
             direction = direc; 
             SetPostion();
+            SetName();
         }
 
         //if its true it sets placing building to a new one in input manager and allows it to be saved
@@ -99,32 +105,38 @@ namespace Factory.Buildings {
 
         public object Save() {
             if (!BuildingPlaced()) return null;
-
             Dictionary<string, object> dict = new Dictionary<string, object>();
-            print("saved " + name + " with type " + buildingType);
-            dict["direc"] = direction;
-            dict["pos"] =  new SVector2(baseCell.pos);
             dict["type"] = buildingType;
 
-            OverrideSave(dict);
+             OverrideSave(dict);
             return dict;
         }
 
-        protected virtual object OverrideSave(Dictionary<string, object> dict) {
-            return null;
-        }
 
         public void Load(object state) {
-            if (namingNums.Sum() != 0) namingNums = new int[GlobalPointers.buildingPrefabs.Length];
-            print(name + " state " + state + " is type " + state.GetType());
-            Dictionary<string, object> dict = ((((KeyValuePair<string, object>)state).Value) as Dictionary<string, object>);
-            OverrideLoad(state);
+            object value = ((KeyValuePair<string, object>)state).Value;
+            Dictionary<string, object> dict = value as Dictionary<string, object>;
+
+            OverrideLoad(dict);
         }
 
-        protected virtual void OverrideLoad(object state) { }
+        protected virtual void OverrideSave(Dictionary<string, object> dict) {
+            dict["direc"] = direction;
+            dict["pos"] = new SVector2(baseCell.pos);
+        }
+        protected virtual void OverrideLoad(Dictionary<string, object> dict) {
+            OnHover(Grid.Instance.GetCell(((SVector2)dict["pos"]).ToVectorInt()));
+            Direction direc = (Direction)dict["direc"];
+            transform.eulerAngles = new Vector3(0, (int)direc, 0);
+            Place(direc);
+        }
 
         public SavingType SaveType() {
             return SavingType.building;
+        }
+
+        public int GetSavePriority() {
+            return savePriority;
         }
     }
 }

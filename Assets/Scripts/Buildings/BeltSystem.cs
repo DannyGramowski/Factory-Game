@@ -1,19 +1,22 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 using Factory.Core;
+using System.Linq;
 
 namespace Factory.Buildings {
-    public class BeltSystem : MonoBehaviour {
+    public class BeltSystem : MonoBehaviour, IOrderable {
         public List<Belt> belts = new List<Belt>();
+        [SerializeField] int savePriority;//allows belts to be ordered
         bool showDebug = false;
         private static int namingNum = 1;
 
         private void Start() {
             transform.name = "Belt System " + namingNum;
+            namingNum++;
+            savePriority = GlobalPointers.buildingPrefabs.Where(s => s is Belt).First().GetSavePriority();
         }
 
         public void AddBelt(Belt b, bool front) {
-          //  print("add to belt system " + namingNum);
             b.beltSystem = this;
             b.transform.parent = transform;
             if (front) {
@@ -64,6 +67,10 @@ namespace Factory.Buildings {
                 Gizmos.color = Color.red;
                 Gizmos.DrawCube(belts[belts.Count - 1].transform.position + new Vector3(0, 0.25f, 0), Vector3.one * 0.5f);
             }
+        }
+
+        public int GetSavePriority() {
+            return savePriority;
         }
     }
 }

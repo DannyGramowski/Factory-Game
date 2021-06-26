@@ -8,11 +8,15 @@ namespace Factory.Buildings {
         [SerializeField] ProductionBuilding setGrabbers;
         [SerializeField] ProducableBuildings producableBuildings;
         [SerializeField] IOType ioType;
-        [SerializeField] int generationType;
+
+        private enum GenerationType {
+            border
+        }
+        [SerializeField] GenerationType generationType;
 
         public void GenerateGrabbers() {
             switch (generationType) {
-                case 1:
+                case GenerationType.border:
                     GenerateBorders();
                     break;
                 default:

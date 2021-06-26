@@ -1,3 +1,4 @@
+using Factory.Saving;
 using UnityEngine;
 namespace Factory.Core {
 
@@ -38,6 +39,17 @@ namespace Factory.Core {
 
         public bool TimerDone() {
             return currTime <= 0;
+        }
+
+        public object Save() {
+            return new SVector3(currTime, maxTime, looping ? 1 : 0);
+        }
+
+        public void Load(object obj) {
+            Vector3 vector = ((SVector3)obj).ToVector();
+            currTime = vector.x;
+            maxTime = vector.y;
+            looping = vector.z == 1;
         }
     }
 }

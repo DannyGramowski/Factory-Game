@@ -1,6 +1,7 @@
 using UnityEngine;
 using Factory.Core;
-
+using Factory.Saving;
+using System.Collections.Generic;
 
 namespace Factory.Buildings {
     [RequireComponent(typeof(Timer))]
@@ -13,20 +14,20 @@ namespace Factory.Buildings {
         [SerializeField] SpriteRenderer arrow;
 
         static Vector3 modelLocalScale;
-        Belt connectedBelt;
-        GrabberSpot grabberSpot;
+        Belt connectedBelt;//
+        GrabberSpot grabberSpot;//
         ProductionBuilding connectedBuilding;
-        Timer timer;
-        bool toBuilding;//if true belt to building
+        Timer timer;//
+        bool toBuilding;//if true belt to building//
         bool endPlaced = false;
 
-        Item movingItem = null;
-        Item filterItem;
+        Item movingItem = null;//
+        Item filterItem;//
 
         bool showDebug;
       //  Collider collider;
         Building hoverBuilding;
-
+        Core.Grid grid;
         protected override void Awake() {
             timer = GetComponent<Timer>();
             base.Awake();
@@ -34,6 +35,7 @@ namespace Factory.Buildings {
                 modelLocalScale = new Vector3(model.transform.localScale.x, model.transform.localScale.y, model.transform.localScale.z);
             }
             endPlaced = false;
+            grid = Core.Grid.Instance; 
             ResetModel();
         }
 
@@ -77,16 +79,12 @@ namespace Factory.Buildings {
 
             if(BuildingPlaced()) {
                 timer.StartUp(timePerCell * (Vector2Int.Distance(connectedBelt.GetBaseCell().pos, grabberSpot.cell.pos)));
-                print("building placed");
             }
         }
 
         public override void OnHover(Cell hoverCell) {
-            if (baseCell == hoverCell)
-                return; //you dont need to update it if hover is the same
-            //base.OnHover(hoverCell);
+            if (baseCell == hoverCell) return; //you dont need to update it if hover is the same
             baseCell = hoverCell;
-            //print("on hover " + baseCell);
             if (ValidPlacment(hoverCell.pos)) {
                 hoverBuilding = hoverCell.building;
                 SetModel(hoverCell);
@@ -175,7 +173,6 @@ namespace Factory.Buildings {
 
             Cell from = null;
             Cell to = null;
-            //      this.baseCell = currHover;
             if (toBuilding) {
                 from = connectedBelt?.GetBaseCell() ?? currHover;
                 to = grabberSpot?.cell ?? currHover;
@@ -195,12 +192,9 @@ namespace Factory.Buildings {
         }
 
         private bool ValidPlacment(Vector2Int currHover) {
-            if (!EndPlaced()) {
-                print("no end placed");
-                return true; 
-            }//allows it to be placed if it does not have one end placed
-
+            if (!EndPlaced()) return true; 
             if (HasBothConnections())return false;
+
             Cell hover = Core.Grid.Instance.GetCell(currHover);
             Building b = hover.building;
             Vector2 buildingPos;
@@ -242,11 +236,9 @@ namespace Factory.Buildings {
         }
 
         private void AddBuilding(Cell clickedLoc, ProductionBuilding b, bool input) {
-            print("add building");
             connectedBuilding = b;
             grabberSpot = connectedBuilding.AddGrabber(clickedLoc, this, input);
             if (grabberSpot != null) {
-                print("placed building");
                 endPlaced = true;
                 toBuilding = input;
             } else {
@@ -261,6 +253,35 @@ namespace Factory.Buildings {
             b.grabber = this;
             emptySpace.transform.position = b.itemPos;
         }
+        protected override void OverrideSave(Dictionary<string, object> dict) {
+            dict["belt"] = new SVector2(connectedBelt.GetBaseCell().pos);
+            dict["spot"] = new SVector2(grabberSpot.cell.pos);
+            dict["timer"] = timer.Save();
+            dict["toBuilding"] = toBuilding;
+            dict["movingItem"] = movingItem;
+            dict["filterItem"] = filterItem;
+        }
+
+        protected override void OverrideLoad(Dictionary<string, object> dict) {
+            toBuilding = (bool)dict["toBuilding"];
+            timer.Load(dict["timer"]);
+            movingItem = dict.ContainsKey("movingItem") ? dict["movingItem"] as Item : null;
+            filterItem = dict.ContainsKey("filerItem") ? dict["filerItem"] as Item : null;
+
+            Cell buildingCell = grid.GetCell(((SVector2)dict["spot"]).ToVectorInt());
+            Cell beltCell = grid.GetCell(((SVector2)dict["belt"]).ToVectorInt());
+           
+            if(toBuilding) {
+                AddBuilding(buildingCell, buildingCell.building as ProductionBuilding, true);
+                OnHover(beltCell);
+                AddBelt(beltCell.building as Belt, false);
+            } else {
+                AddBelt(beltCell.building as Belt, false);
+                OnHover(buildingCell);
+                AddBuilding(buildingCell, buildingCell.building as ProductionBuilding, false);
+            }
+        }
+
 
         private void OnDrawGizmos() {//cyan for the input and magenta for the output
             if (showDebug) {

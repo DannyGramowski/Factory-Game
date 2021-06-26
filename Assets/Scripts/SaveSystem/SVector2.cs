@@ -16,6 +16,11 @@ namespace Factory.Saving {
             y = vector.y;
         }
 
+        public SVector2(int x, int y) {
+            this.x = x;
+            this.y = y;
+        }
+
         public Vector2 ToVector() {
             return new Vector2(x, y);
         }

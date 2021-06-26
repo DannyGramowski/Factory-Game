@@ -68,9 +68,10 @@ MonoBehaviour:
   stackSize: 100
   productionCost: 200
   errorDistance: 0.25
-  producableBuilding: 0
+  producableBuilding: 1
   recipe:
   - {fileID: 4620507054958866899, guid: 53ed65f866c35d746a2fcf6e7b92631d, type: 3}
+  - {fileID: 1211200759242025845, guid: 0db3b2529a4767546a9c7cb6cc27a274, type: 3}
 --- !u!65 &1078030510560268308
 BoxCollider:
   m_ObjectHideFlags: 0

@@ -1,4 +1,5 @@
 ﻿using Factory.Core;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace Factory.Buildings {
@@ -9,8 +10,10 @@ namespace Factory.Buildings {
         public float speed;
         public int beltNum => beltSystem.BeltNum(this);
         Core.Grid grid;
-        private void Start() {
+
+        protected override void Awake() {
             grid = Core.Grid.Instance;
+            base.Awake();
         }
 
         public override void Place(Direction direction) {
@@ -20,8 +23,8 @@ namespace Factory.Buildings {
         }
 
          bool CheckBeltSystem() {
-                 bool addedBelt = false;
-           // print("check belt system " + baseCell + " direction " + direction + ".");
+             bool addedBelt = false;
+            //print("check belt system " + baseCell + " direction " + direction + ".");
                  Vector2Int forwardCell = Utils.Vector2FromDirection(direction) + baseCell.pos;
                  if (validCell(forwardCell)) {
                      Cell cell = grid.GetCell(forwardCell);
@@ -41,9 +44,9 @@ namespace Factory.Buildings {
                      temp.AddBelt(this, false);
                      temp.SetShowDebug(GlobalPointers.showDebug);
                  }
-                 return true;
-             
+             return true;
          }
+
 
         bool AddToBeltSystem(float angle) {
             Direction direc = Utils.AngleToDirection(transform.eulerAngles.y + angle);
@@ -57,10 +60,10 @@ namespace Factory.Buildings {
                     if (beltSystem && !(otherBeltSystem.Equals(beltSystem))) {
                         otherBeltSystem.CombineBeltSystems(beltSystem);
                     } else if (!(otherBeltSystem.Equals(beltSystem))) {
-              //          print("added to belt system");
+                    //    print("added to belt system");
                         otherBeltSystem.AddBelt(this, false);
                     }
-             //       print("did nothing");
+                  //  print("did nothing");
                     return true;
                 }
 
@@ -75,14 +78,21 @@ namespace Factory.Buildings {
             if (toBelt && fromBelt) {
                 Vector2Int checkPos = (Utils.Vector2FromDirection(toBelt.direction) + to.pos);
                 if (checkPos.Equals(from.pos)) {
-             //       print("belt connected is true");
+            //        print("belt connected is true");
                     return true;
                 }
             }
             return false;
         }
 
+        /* protected override void OverrideLoad(object state) {
+             //Start();
+            // CheckBeltSystem();   
+         }*/
+
         bool validCell(Vector2Int pos) {
+          //  print("pos " + pos);
+            //print("grid " + grid);
             return !(pos.x > grid.width - 1 || pos.x < 0 || pos.y > grid.height - 1 || pos.y < 0);
         }
     }

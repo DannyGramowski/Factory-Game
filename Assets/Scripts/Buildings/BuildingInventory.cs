@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using Factory.Core;
+using Factory.Saving;
 
 namespace Factory.Buildings {
     [System.Serializable]
@@ -9,6 +10,7 @@ namespace Factory.Buildings {
         [SerializeField] int maxStacks;
 
         public BuildingInventory(int itemStackSlots) {
+           // Debug.Log("constructed building inventory");
             maxStacks = itemStackSlots;
             for (int i = 0; i < maxStacks; i++) {
                 inventory.Add(new ItemStack());
@@ -105,6 +107,26 @@ namespace Factory.Buildings {
             }
             return false;
         }
+
+        public object Save() {
+            //Dictionary<string, object> dict = new Dictionary<string, object>();
+            List<SVector2> list = new List<SVector2>();
+            foreach(ItemStack stack in inventory) {
+                list.Add(stack.Save());
+            }
+            return list;
+        }
+
+        public void Load(object obj) {
+
+            List<SVector2> list = (List<SVector2>) obj;
+            Debug.Log("inventory load");
+            if (inventory.Count == 0) return;
+            Debug.Log("list count " + list.Count + " inventory size " + inventory.Count);
+            for(int i = 0; i < list.Count; i++) {
+                inventory[i].Load(list[i]);
+            }
+        }
     }
 
     [System.Serializable]
@@ -151,6 +173,20 @@ namespace Factory.Buildings {
         public bool IsEmpty() {
             return stackType == null;
         }
+
+        //item type, number of items in list
+        public SVector2 Save() {
+            return new SVector2(Item.ItemIndex(stackType),stack.Count);
+        }
+
+        public void Load(SVector2 v2) {
+            Vector2Int temp = v2.ToVectorInt();
+            for(int i = 0; i < temp.y; i++) {
+                Item item = Item.SpawnItem(temp.x);
+                AddItem(item);
+            }
+        }
+
         private void Reset() {
             stackType = null;
         }

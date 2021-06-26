@@ -310,6 +310,7 @@ MonoBehaviour:
   selected: 0
   name: Grabber
   placedCells: []
+  savePriority: 3
   model: {fileID: 5467734446358455190}
   position: {fileID: 7889331982735197514}
   emptySpace: {fileID: 6422458446243119187}
