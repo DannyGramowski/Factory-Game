@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using UnityEditor;
 using UnityEngine;
 namespace Factory.Core {
@@ -140,6 +141,12 @@ namespace Factory.Core {
             return output;
 
         }
+
+        public static T[] LoadResource<T>(string path) {
+            //(Resources.LoadAll("Items\\", typeof(Item)) as Item[])?.ToList();
+            return null;
+        }
+
 
     }
 }

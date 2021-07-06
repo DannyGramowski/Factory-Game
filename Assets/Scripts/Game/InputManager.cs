@@ -13,12 +13,11 @@ namespace Factory.Core {
                 }
             } }
 
+        [SerializeField] LayerMask layerMask;
+
         private Building placingBuilding;
         private Vector3 buildingRot = new Vector3(0, 0, 0);
 
-        [SerializeField] LayerMask layerMask;
-
-        int[] test;
         public Building selection;
         Building oldSelection;
 

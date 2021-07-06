@@ -54,6 +54,10 @@ namespace Factory.Buildings {
 
         public virtual void SetShowDebug(bool showDebug) { }
 
+
+        public string GetName() {
+            return name;
+        }
         private void SetName() {
             if (namingNums == null) {
                 namingNums = new int[GlobalPointers.buildingPrefabs.Length];
@@ -61,7 +65,7 @@ namespace Factory.Buildings {
 
             namingNums[buildingType]++;
 
-            transform.name = name + namingNums[buildingType];
+            transform.name = name + " "+ namingNums[buildingType];
         }
 
         private void SetLocation() {
