@@ -12,6 +12,7 @@ namespace Factory.Core {
         public float productionCost;
 
         [SerializeField] float errorDistance = 0.5f;
+        [SerializeField] float checkDistance = 0.1f;
 
         public ProducableBuildings producableBuilding;
         public List<Item> recipe;
@@ -23,6 +24,9 @@ namespace Factory.Core {
         float time;
         bool onBelt;
         bool moving;
+        Direction movingDirec;
+
+        bool debug = false;
 
         public static Item SpawnItem(int index) {
             return SpawnItem(index, Vector3.zero);
@@ -36,14 +40,19 @@ namespace Factory.Core {
             return GlobalPointers.itemPrefabs.IndexOf(item);
         }
 
+        private void Start() {
+            debug = GlobalPointers.showDebug;
+        }
+
         private void FixedUpdate() {
+            
             if (onBelt && moving && nextBelt) {
                 time += Time.deltaTime;
                 transform.position = Vector3.Lerp(transform.position, nextBelt.itemPos, nextBelt.speed / 60 * time);
                 float distance = Vector3.Distance(transform.position, nextBelt.itemPos);
                 if (distance < errorDistance) {
                     currBelt = nextBelt;
-                    nextBelt = beltSystem.NextBelt(currBelt);
+                    SetNextBelt();
                     time = 0;
                 }
             }
@@ -52,9 +61,44 @@ namespace Factory.Core {
 
 
         private void OnTriggerStay(Collider other) {
-            if (other.GetComponent<Item>()) {
+            Item b = other.GetComponent<Item>();
+            if (b != null && !Infront(b)) {
+              //  print("stop moving");
                 moving = false;
             }
+        }
+
+        private void SetNextBelt() {
+            nextBelt = beltSystem.NextBelt(currBelt);
+            //if(nextBelt != null && beltSystem != nextBelt.beltSystem ) {
+            if(nextBelt != null) {
+                beltSystem.BeltAdded -= OnBeltAdded;
+                beltSystem = nextBelt.beltSystem;
+                beltSystem.BeltAdded += OnBeltAdded;
+            }
+            //movingDirec = currBelt.direction;
+        }
+
+
+        void OnBeltAdded() {
+            print(name + " on belt added");
+            SetNextBelt();
+        }
+
+        private bool Infront(Item other) {
+            /*   if (nextBelt == null) return false;
+               Vector3 offset = (transform.position - other.transform.position).normalized;
+               Vector2Int direcOffset = Utils.Vector2FromDirection(nextBelt.direction);
+   *//*
+               print($"position offset is {offset}, other pos {other.transform.position}, curr pos {transform.position}");
+               print($"direc offset is {direcOffset} direc is {movingDirec}");
+               print($"returned {offset.x == direcOffset.x} && {offset.z == direcOffset.y}");*//*
+
+               return offset.x == direcOffset.x && offset.z == direcOffset.y;*/
+            Vector2 direc = Utils.Vector2FromDirection(movingDirec);
+            Ray ray = new Ray(transform.position, new Vector3(direc.x, 0, direc.y) * checkDistance);
+            return Physics.Raycast(ray);
+           // return false;
         }
 
 
@@ -83,7 +127,7 @@ namespace Factory.Core {
         public void AddToBeltSystem(Belt belt) {
             this.beltSystem = belt.beltSystem;
             currBelt = belt;
-            nextBelt = beltSystem.NextBelt(belt);
+            SetNextBelt();
             onBelt = true;
             moving = true;
         }
@@ -100,6 +144,17 @@ namespace Factory.Core {
 
         public void Activate() {
             gameObject.SetActive(true);
+        }
+
+        private void OnDrawGizmos() {
+            if (!debug) return;
+
+            Vector2 direc = Utils.Vector2FromDirection(movingDirec);
+            Vector3 direction = new Vector3(direc.x, 0, direc.y) * checkDistance;
+            print("direction " + direction);
+            Ray ray = new Ray(transform.position,direction);
+            Gizmos.color = Color.red;
+            Gizmos.DrawRay(ray);
         }
     }
 

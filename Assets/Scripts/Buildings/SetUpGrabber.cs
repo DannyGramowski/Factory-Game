@@ -1,11 +1,12 @@
 using Factory.Core;
 using System.Collections.Generic;
+using UnityEditor;
 using UnityEngine;
 
 namespace Factory.Buildings {
     [ExecuteInEditMode]
     public class SetUpGrabber : MonoBehaviour {
-        [SerializeField] ProductionBuilding setGrabbers;
+        public ProductionBuilding setGrabbersInput;
         [SerializeField] ProducableBuildings producableBuildings;
         [SerializeField] IOType ioType;
 
@@ -15,17 +16,25 @@ namespace Factory.Buildings {
         [SerializeField] GenerationType generationType;
 
         public void GenerateGrabbers() {
+            if (setGrabbersInput == null) {
+                Debug.LogWarning("there is no building to set the grabbers of");
+                return; 
+            }
+
+            ProductionBuilding setGrabbers = PrefabUtility.InstantiatePrefab(setGrabbersInput) as ProductionBuilding;
             switch (generationType) {
                 case GenerationType.border:
-                    GenerateBorders();
+                    GenerateBorders(setGrabbers);
                     break;
                 default:
                     Debug.LogWarning($"{generationType} is not a valid generation");
                     break;
             }
+            PrefabUtility.ApplyPrefabInstance(setGrabbers.gameObject, InteractionMode.AutomatedAction);
+            DestroyImmediate(setGrabbers.gameObject);
         }
 
-        public void GenerateBorders() {
+        public void GenerateBorders(ProductionBuilding setGrabbers) {
             List<GrabberSpot> temp = new List<GrabberSpot>();
 
             for (int x = 0; x < setGrabbers.dimensions.x; x++) {

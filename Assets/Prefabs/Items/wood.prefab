@@ -151,6 +151,7 @@ MonoBehaviour:
   stackSize: 100
   productionCost: 200
   errorDistance: 0.25
+  checkDistance: 5
   producableBuilding: 0
   recipe: []
 --- !u!65 &4273706567329401017

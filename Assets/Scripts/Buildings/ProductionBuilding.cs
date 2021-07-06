@@ -8,15 +8,14 @@ namespace Factory.Buildings {
         public List<GrabberSpot> grabberSpots = new List<GrabberSpot>();
 
         [SerializeField] protected BuildingInventory inventory;
-        [SerializeField] int numberOfStacks;
+        [SerializeField] int numberOfStacks = 3;
 
         List<Grabber> inGrabbers = new List<Grabber>();
         List<Grabber> outGrabbers = new List<Grabber>();
 
         protected override void Awake() {
-            Debug.Assert(numberOfStacks > 0 || this is Assembler, "you need to set the number of inventory slots");
+            //Debug.Assert(numberOfStacks > 0 || this is Assembler, "you need to set the number of inventory slots");
             inventory = new BuildingInventory(numberOfStacks);
-
             base.Awake();
         }
 
@@ -48,7 +47,9 @@ namespace Factory.Buildings {
 
         public GrabberSpot AddGrabber(Cell loc, Grabber g, bool input) {
             GrabberSpot grabberSpot = HasGrabberSpot(loc);
-            if (grabberSpot != null) {
+            
+            if (grabberSpot != null && grabberSpot.connectedGrabber == null) {
+                print("added grabber to grabber spot");
                 grabberSpot.connectedGrabber = g;
                 if (input && grabberSpot.spotType != IOType.output) {
                     inGrabbers.Add(g);

@@ -2,11 +2,17 @@
 using UnityEngine;
 using Factory.Core;
 using System.Linq;
+using System;
 
 namespace Factory.Buildings {
+
+//public delegate void BeltAdded();
     public class BeltSystem : MonoBehaviour, IOrderable {
         public List<Belt> belts = new List<Belt>();
+        public Action BeltAdded;
+
         [SerializeField] int savePriority;//allows belts to be ordered
+
         bool showDebug = false;
         private static int namingNum = 1;
 
@@ -24,6 +30,8 @@ namespace Factory.Buildings {
             } else {
                 belts.Add(b);
             }
+
+            BeltAdded?.Invoke();
         }
 
         public void CombineBeltSystems(BeltSystem addedBelts) {

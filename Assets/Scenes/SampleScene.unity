@@ -1543,6 +1543,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 94391272}
     m_Modifications:
+    - target: {fileID: 2860573118337405054, guid: d41ea341cc120a1479e04efce0ce0221, type: 3}
+      propertyPath: m_RootOrder
+      value: 11
+      objectReference: {fileID: 0}
     - target: {fileID: 6150866104537761472, guid: d41ea341cc120a1479e04efce0ce0221, type: 3}
       propertyPath: m_Name
       value: Storage
@@ -1595,7 +1599,7 @@ PrefabInstance:
   m_SourcePrefab: {fileID: 100100000, guid: d41ea341cc120a1479e04efce0ce0221, type: 3}
 --- !u!4 &793135561 stripped
 Transform:
-  m_CorrespondingSourceObject: {fileID: 6150866104537761486, guid: d41ea341cc120a1479e04efce0ce0221, type: 3}
+  m_CorrespondingSourceObject: {fileID: 2860573118337405054, guid: d41ea341cc120a1479e04efce0ce0221, type: 3}
   m_PrefabInstance: {fileID: 793135560}
   m_PrefabAsset: {fileID: 0}
 --- !u!1 &843772075
@@ -2701,7 +2705,7 @@ MonoBehaviour:
   - {fileID: 2278762276439751666, guid: 2ec3d4bc56b42f84a9331f2abf754ea4, type: 3}
   - {fileID: 1053517709821152982, guid: be395214ee1339c4b9d25dcdf7140e75, type: 3}
   - {fileID: 1428323416386388762, guid: 6b9cf8082fe99e24eb3306e1a2f59ca7, type: 3}
-  - {fileID: 6150866104537761473, guid: d41ea341cc120a1479e04efce0ce0221, type: 3}
+  - {fileID: 2860573118337405052, guid: d41ea341cc120a1479e04efce0ce0221, type: 3}
   - {fileID: 3899194813947211336, guid: 592bda233c8bdff41a17a05967d8256f, type: 3}
   beltSystemPrefabInput: {fileID: 3934091615639216686, guid: 850afa9240c581d448c8305a4bb2fc18, type: 3}
   itemPrefabsInput:
@@ -4529,7 +4533,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ebac88589ae76a643880ae35716c0eda, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  setGrabbers: {fileID: 6150866104537761473, guid: d41ea341cc120a1479e04efce0ce0221, type: 3}
+  setGrabbersInput: {fileID: 3899194813947211336, guid: 592bda233c8bdff41a17a05967d8256f, type: 3}
   producableBuildings: 2
   ioType: 0
   generationType: 0
@@ -5096,7 +5100,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3899194813947211337, guid: 592bda233c8bdff41a17a05967d8256f, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -2.4370003
+      value: 5.25
       objectReference: {fileID: 0}
     - target: {fileID: 3899194813947211337, guid: 592bda233c8bdff41a17a05967d8256f, type: 3}
       propertyPath: m_LocalPosition.y

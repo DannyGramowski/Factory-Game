@@ -107,16 +107,15 @@ namespace Factory.Buildings {
             if (!BuildingPlaced()) return null;
             Dictionary<string, object> dict = new Dictionary<string, object>();
             dict["type"] = buildingType;
-
+            dict["saveGUID"] = GetComponent<SavingEntity>().GetUniqueIdentifier();
              OverrideSave(dict);
             return dict;
         }
 
-
         public void Load(object state) {
             object value = ((KeyValuePair<string, object>)state).Value;
             Dictionary<string, object> dict = value as Dictionary<string, object>;
-
+            GetComponent<SavingEntity>().SetUniqueIdentifier(dict["saveGUID"] as string);
             OverrideLoad(dict);
         }
 

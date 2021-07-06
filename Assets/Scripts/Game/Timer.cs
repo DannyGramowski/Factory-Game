@@ -1,7 +1,7 @@
 using Factory.Saving;
 using UnityEngine;
 namespace Factory.Core {
-
+    [System.Serializable]
     public class Timer : MonoBehaviour {
         private float currTime;
         private float maxTime;

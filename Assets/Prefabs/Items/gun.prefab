@@ -68,6 +68,7 @@ MonoBehaviour:
   stackSize: 100
   productionCost: 200
   errorDistance: 0.25
+  checkDistance: 5
   producableBuilding: 1
   recipe:
   - {fileID: 7099050242453161963, guid: 4e419e9d98823ad4595da2a6a0ae35ac, type: 3}

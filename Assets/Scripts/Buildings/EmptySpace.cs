@@ -5,8 +5,8 @@ namespace Factory.Buildings {
     [RequireComponent(typeof(BoxCollider))]
     public class EmptySpace : MonoBehaviour {
         new Collider collider;
-        public bool isEmpty;
-        public Item item;
+        private bool isEmpty;
+        private Item item;
         bool change;
         void Start() {
             collider = GetComponent<BoxCollider>();
@@ -25,6 +25,14 @@ namespace Factory.Buildings {
             isEmpty = false;
             change = false;
             item = other.GetComponent<Item>();
+        }
+
+        public bool IsEmpty() {
+            return isEmpty;
+        }
+
+        public Item GetItem() {
+            return item;
         }
     }
 }

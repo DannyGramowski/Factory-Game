@@ -70,7 +70,7 @@ namespace Factory.Buildings {
                 Belt belt = hoverBuilding as Belt;
                 if (belt != null) {
                     if (belt.grabber == null) {
-                        AddBelt(belt, HasConnectedBuilding());
+                        AddBelt(belt, !HasConnectedBuilding());
                     }
                 } else {
                     AddBuilding(baseCell, hoverBuilding as ProductionBuilding, HasConnectedBelt());
@@ -97,7 +97,7 @@ namespace Factory.Buildings {
 
         public override void Deconstruct() {
             if (HasGrabberSpot()) {
-                grabberSpot.cell.building = null;
+                grabberSpot.connectedGrabber = null;
             }
             if (connectedBelt) {
                 connectedBelt.grabber = null;
@@ -139,15 +139,17 @@ namespace Factory.Buildings {
                             movingItem = null;
                         }
                     } else {
-                        movingItem.AddToBeltSystem(connectedBelt);
-                        movingItem.transform.position = connectedBelt.itemPos;
-                        movingItem.Activate();
-                        movingItem = null;
+                        if (emptySpace.IsEmpty()) {
+                            movingItem.AddToBeltSystem(connectedBelt);
+                            movingItem.transform.position = connectedBelt.itemPos;
+                            movingItem.Activate();
+                            movingItem = null;
+                        }
                     }
                 }
             } else if (toBuilding) {
-                if (emptySpace.item && (filterItem == null || emptySpace.item.Equals(filterItem))) {
-                    movingItem = emptySpace.item;
+                if (emptySpace.GetItem() && (filterItem == null || emptySpace.GetItem().Equals(filterItem))) {
+                    movingItem = emptySpace.GetItem();
                     movingItem.RemoveFromBeltSystem();
                     movingItem.Deactivate();
                 }
@@ -183,12 +185,24 @@ namespace Factory.Buildings {
 
             position.position = Vector3.Lerp(from.itemPos, to.itemPos, 0.5f);
             Vector2Int offSet = from.pos - to.pos;
+
             float angle = -Utils.Angle(offSet);
-            //print("angle " + angle);
+
+
             position.eulerAngles = Utils.Vector3SetY(transform.eulerAngles, angle);
             model.transform.localScale = new Vector3(modelLocalScale.x * offSet.magnitude, modelLocalScale.y, modelLocalScale.z * 0.6f);
+
             GetComponent<BoxCollider>().size = new Vector3(modelLocalScale.x * offSet.magnitude, modelLocalScale.y, modelLocalScale.z * 0.6f);
             GetComponent<BoxCollider>().center = position.localPosition;
+            
+            //arrow.transform.LookAt(to.itemPos);
+            if (toBuilding) {
+                print("arrow to building");
+                arrow.transform.eulerAngles = new Vector3(90, 180, 0);
+            } else {
+                print("arrow not to building");
+                arrow.transform.eulerAngles = new Vector3(90, 0, 0);
+            }
         }
 
         private bool ValidPlacment(Vector2Int currHover) {
@@ -239,8 +253,9 @@ namespace Factory.Buildings {
             connectedBuilding = b;
             grabberSpot = connectedBuilding.AddGrabber(clickedLoc, this, input);
             if (grabberSpot != null) {
-                endPlaced = true;
                 toBuilding = input;
+                print("from building set toBuilding  to " + input);
+                endPlaced = true;
             } else {
                 connectedBuilding = null;//if there is no valid grabber it will not allow it to be placed
                 grabberSpot = null;
@@ -250,6 +265,9 @@ namespace Factory.Buildings {
         private void AddBelt(Belt b, bool input) {
             endPlaced = true;
             connectedBelt = b;
+            print("from belt set toBuilding to " + input);
+
+            toBuilding = input;
             b.grabber = this;
             emptySpace.transform.position = b.itemPos;
         }
