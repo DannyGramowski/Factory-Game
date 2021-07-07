@@ -49,7 +49,6 @@ namespace Factory.Buildings {
             GrabberSpot grabberSpot = HasGrabberSpot(loc);
             
             if (grabberSpot != null && grabberSpot.connectedGrabber == null) {
-                print("added grabber to grabber spot");
                 grabberSpot.connectedGrabber = g;
                 if (input && grabberSpot.spotType != IOType.output) {
                     inGrabbers.Add(g);

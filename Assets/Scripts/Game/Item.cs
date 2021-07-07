@@ -5,26 +5,30 @@ using Factory.Saving;
 
 namespace Factory.Core {
 
-    public class Item : MonoBehaviour {
+    [SelectionBase][RequireComponent(typeof(SavingEntity))]
+    public class Item : MonoBehaviour, ISaveable {
         public string itemName;
         public Sprite sprite;
         public int stackSize = 100;
         public float productionCost;
 
         [SerializeField] float errorDistance = 0.5f;
-        [SerializeField] float checkDistance = 0.1f;
+        [SerializeField] float checkDistance = 0.2f;
+        [SerializeField] LayerMask itemLayer;
 
         public ProducableBuildings producableBuilding;
         public List<Item> recipe;
 
-        BeltSystem beltSystem;
-        Belt nextBelt;
-        Belt currBelt;
+        static int namingNum = 0;//reset on load
 
-        float time;
-        bool onBelt;
-        bool moving;
-        Direction movingDirec;
+        BeltSystem beltSystem;// from curr belt;
+        Belt nextBelt;
+        Belt currBelt;//
+
+        float time;//
+        bool onBelt;//if it is saved this is true
+        bool moving;//set in fixed update
+        Direction movingDirec;//from currBelt
 
         bool debug = false;
 
@@ -42,10 +46,12 @@ namespace Factory.Core {
 
         private void Start() {
             debug = GlobalPointers.showDebug;
+            namingNum++;
+            name = itemName +" " + namingNum.ToString();
         }
 
         private void FixedUpdate() {
-            
+            moving = !Infront();
             if (onBelt && moving && nextBelt) {
                 time += Time.deltaTime;
                 transform.position = Vector3.Lerp(transform.position, nextBelt.itemPos, nextBelt.speed / 60 * time);
@@ -61,11 +67,11 @@ namespace Factory.Core {
 
 
         private void OnTriggerStay(Collider other) {
-            Item b = other.GetComponent<Item>();
+           /* Item b = other.GetComponent<Item>();
             if (b != null && !Infront(b)) {
               //  print("stop moving");
                 moving = false;
-            }
+            }*/
         }
 
         private void SetNextBelt() {
@@ -76,7 +82,7 @@ namespace Factory.Core {
                 beltSystem = nextBelt.beltSystem;
                 beltSystem.BeltAdded += OnBeltAdded;
             }
-            //movingDirec = currBelt.direction;
+            movingDirec = currBelt.direction;
         }
 
 
@@ -85,20 +91,11 @@ namespace Factory.Core {
             SetNextBelt();
         }
 
-        private bool Infront(Item other) {
-            /*   if (nextBelt == null) return false;
-               Vector3 offset = (transform.position - other.transform.position).normalized;
-               Vector2Int direcOffset = Utils.Vector2FromDirection(nextBelt.direction);
-   *//*
-               print($"position offset is {offset}, other pos {other.transform.position}, curr pos {transform.position}");
-               print($"direc offset is {direcOffset} direc is {movingDirec}");
-               print($"returned {offset.x == direcOffset.x} && {offset.z == direcOffset.y}");*//*
+        private bool Infront() {
 
-               return offset.x == direcOffset.x && offset.z == direcOffset.y;*/
             Vector2 direc = Utils.Vector2FromDirection(movingDirec);
-            Ray ray = new Ray(transform.position, new Vector3(direc.x, 0, direc.y) * checkDistance);
-            return Physics.Raycast(ray);
-           // return false;
+           
+            return Physics.Raycast(transform.position, new Vector3(direc.x, 0, direc.y), checkDistance, itemLayer);
         }
 
 
@@ -151,10 +148,46 @@ namespace Factory.Core {
 
             Vector2 direc = Utils.Vector2FromDirection(movingDirec);
             Vector3 direction = new Vector3(direc.x, 0, direc.y) * checkDistance;
-            print("direction " + direction);
-            Ray ray = new Ray(transform.position,direction);
+        //    Ray ray = new Ray(transform.position);
             Gizmos.color = Color.red;
-            Gizmos.DrawRay(ray);
+            Gizmos.DrawRay(transform.position, direction);
+        }
+
+        public object Save() {
+            if (!onBelt) return null;
+
+            Dictionary<string, object> save = new Dictionary<string, object>();
+            save["itemType"] = Item.ItemIndex(this);
+            save["guid"] = GetComponent<SavingEntity>().GetUniqueIdentifier();
+            save["pos"] = new SVector3(transform.position);
+            save["beltPos"] = new SVector2(currBelt.GetBaseCell().pos);
+            save["time"] = time;
+
+            print("saved " + name);
+            return save;
+        }
+
+        public void Load(object state) {
+            object value = ((KeyValuePair<string, object>)state).Value;
+            Dictionary<string, object> save = (Dictionary<string, object>)value;
+
+            GetComponent<SavingEntity>().SetUniqueIdentifier(save["guid"] as string);
+            transform.position =  (save["pos"] as SVector3).ToVector();
+            time = (float)save["time"];
+
+            Vector2Int beltPos = (save["beltPos"] as SVector2).ToVectorInt();
+            Cell beltCell = Grid.Instance.GetCell(beltPos);
+            currBelt = beltCell.building as Belt;
+
+            beltSystem = currBelt.beltSystem;
+            nextBelt = beltSystem.NextBelt(currBelt);
+            movingDirec = currBelt.direction;
+            onBelt = true;
+            
+        }
+
+        public SavingType SaveType() {
+            return SavingType.item;
         }
     }
 

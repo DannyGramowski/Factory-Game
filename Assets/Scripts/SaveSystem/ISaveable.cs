@@ -10,6 +10,7 @@ namespace Factory.Saving {
     }
 
     public enum SavingType {
-        building
+        building,
+        item
     }
 }

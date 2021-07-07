@@ -13,10 +13,12 @@ using UnityEngine.SceneManagement;
 namespace Factory.Saving {
 
     public class SaveSystem : Singleton<SaveSystem> {
+        [SerializeField] bool loadOnStart;
+
         Dictionary<string, object>[] saveTypes;
 
         private void Start() {
-            Load();
+            if (loadOnStart)Load();
         }
 
        public void QuickSave() {
@@ -31,7 +33,7 @@ namespace Factory.Saving {
             saveTypes = LoadFile(saveFile);
             OrderBuildings();
             CaptureState(saveTypes);
-            PrintDict(saveTypes[0]);
+            PrintDict(saveTypes[1]);
             SaveFile(saveFile, saveTypes);
         }
 
@@ -42,6 +44,7 @@ namespace Factory.Saving {
         public void Load(string saveFile) {
             saveTypes = LoadFile(saveFile);
             RestoreBuildings(saveTypes[0]);
+            RestoreItems(saveTypes[1]);
         }
 
         [MenuItem("Utilities/ clear save files")]
@@ -97,7 +100,7 @@ namespace Factory.Saving {
 
         private void RestoreBuildings(Dictionary<string, object> buildings) {
             if (buildings == null) return;
-            PrintDict(buildings);
+           // PrintDict(buildings);
             foreach(object obj in buildings) {
                 Dictionary<string, object> buildingTypeDict = ((((KeyValuePair<string, object>)obj).Value) as Dictionary<string, object>);
                 var buildingType = (buildingTypeDict["type"]);
@@ -106,10 +109,21 @@ namespace Factory.Saving {
             }
         }
 
+        private void RestoreItems(Dictionary<string, object> items) {
+            if (items == null) return;
+            foreach(object obj in items) {
+                print("restored item " + obj);
+                Dictionary<string, object> itemTypeDict = ((((KeyValuePair<string, object>)obj).Value) as Dictionary<string, object>);
+                int itemType = (int)itemTypeDict["itemType"];
+                Vector3 pos = (itemTypeDict["pos"] as SVector3).ToVector();
+                Item temp = Item.SpawnItem(itemType, pos);
+                temp.Load(obj);
+            }
+        }
+
         private void CaptureState(Dictionary<string, object>[] state) {
             foreach (SavingEntity saveable in SavingEntity.globalLookup.Values) {
                 foreach(KeyValuePair<string, object> pair in saveable.CaptureState()) {
-                    int index = GetIndex(pair.Key);
                     if (pair.Value != null) {
                         saveTypes[GetIndex(pair.Key)][saveable.GetUniqueIdentifier().Substring(0, 5) + pair.Key] = pair.Value;
                     }

@@ -197,10 +197,8 @@ namespace Factory.Buildings {
             
             //arrow.transform.LookAt(to.itemPos);
             if (toBuilding) {
-                print("arrow to building");
                 arrow.transform.eulerAngles = new Vector3(90, 180, 0);
             } else {
-                print("arrow not to building");
                 arrow.transform.eulerAngles = new Vector3(90, 0, 0);
             }
         }
@@ -254,7 +252,6 @@ namespace Factory.Buildings {
             grabberSpot = connectedBuilding.AddGrabber(clickedLoc, this, input);
             if (grabberSpot != null) {
                 toBuilding = input;
-                print("from building set toBuilding  to " + input);
                 endPlaced = true;
             } else {
                 connectedBuilding = null;//if there is no valid grabber it will not allow it to be placed
@@ -265,7 +262,6 @@ namespace Factory.Buildings {
         private void AddBelt(Belt b, bool input) {
             endPlaced = true;
             connectedBelt = b;
-            print("from belt set toBuilding to " + input);
 
             toBuilding = input;
             b.grabber = this;

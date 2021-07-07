@@ -6,7 +6,9 @@ namespace Factory.Buildings {
     public class Miner : ProductionBuilding, ISelectableBuilding {
         [SerializeField] Item spawnItem;
         [SerializeField] float productionPerSec;
+        [SerializeField] int maxItemProduced = -1;
 
+        int itemsProducted = 0;
         float currProduction;
 
         private void Update() {
@@ -19,9 +21,11 @@ namespace Factory.Buildings {
         }
 
         void SpawnItem() {
+            if (maxItemProduced != -1 && itemsProducted == maxItemProduced) return;
             if (spawnItem != null && inventory.HasSpace(spawnItem)) {
                 Item item = Instantiate(spawnItem, transform.position, Quaternion.identity, GlobalPointers.ItemParent);
                 if (inventory.AddItemToStack(item)) {
+                    itemsProducted++;
                     item.Deactivate();
                     currProduction = spawnItem.productionCost;
                     Debug.Assert(currProduction > 0, "you need to set the production value of " + spawnItem);

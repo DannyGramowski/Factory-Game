@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 2209139158943493484}
   - component: {fileID: 4620507054958866899}
   - component: {fileID: 4680885706182266304}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: metal
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -68,7 +68,10 @@ MonoBehaviour:
   stackSize: 100
   productionCost: 200
   errorDistance: 0.25
-  checkDistance: 5
+  checkDistance: 0.2
+  itemLayer:
+    serializedVersion: 2
+    m_Bits: 512
   producableBuilding: 0
   recipe: []
 --- !u!65 &4680885706182266304
@@ -94,7 +97,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5447679398815300605}
   - component: {fileID: 3999460878773909518}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: sprite
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -178,7 +181,7 @@ GameObject:
   - component: {fileID: 1008375043008341808}
   - component: {fileID: 3684853107654293134}
   - component: {fileID: 3279829220269732331}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Cube
   m_TagString: Untagged
   m_Icon: {fileID: 0}

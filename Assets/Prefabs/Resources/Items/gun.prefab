@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 6073604852267363690}
   - component: {fileID: 5759392041793277512}
   - component: {fileID: 4549769434140469954}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: gun
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -68,7 +68,10 @@ MonoBehaviour:
   stackSize: 100
   productionCost: 200
   errorDistance: 0.25
-  checkDistance: 5
+  checkDistance: 0.2
+  itemLayer:
+    serializedVersion: 2
+    m_Bits: 512
   producableBuilding: 1
   recipe:
   - {fileID: 7099050242453161963, guid: 4e419e9d98823ad4595da2a6a0ae35ac, type: 3}
@@ -97,7 +100,7 @@ GameObject:
   - component: {fileID: 3111260814494703079}
   - component: {fileID: 7364211753962361762}
   - component: {fileID: 7897635438722994791}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Cube
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -178,7 +181,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2135399922362716883}
   - component: {fileID: 1517874749842086681}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: sprite
   m_TagString: Untagged
   m_Icon: {fileID: 0}
