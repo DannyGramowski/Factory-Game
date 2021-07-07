@@ -120,9 +120,7 @@ namespace Factory.Buildings {
         public void Load(object obj) {
 
             List<SVector2> list = (List<SVector2>) obj;
-            Debug.Log("inventory load");
             if (inventory.Count == 0) return;
-            Debug.Log("list count " + list.Count + " inventory size " + inventory.Count);
             for(int i = 0; i < list.Count; i++) {
                 inventory[i].Load(list[i]);
             }

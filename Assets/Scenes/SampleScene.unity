@@ -426,6 +426,7 @@ GameObject:
   - component: {fileID: 255109641}
   - component: {fileID: 255109640}
   - component: {fileID: 255109639}
+  - component: {fileID: 255109642}
   m_Layer: 0
   m_Name: Coal
   m_TagString: Untagged
@@ -485,6 +486,19 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
+--- !u!114 &255109642
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 255109638}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7e4539a36f0b1cd43928f8f0b392b681, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  uniqueIdentifier: 
 --- !u!1 &357721877
 GameObject:
   m_ObjectHideFlags: 0
@@ -1823,6 +1837,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 84e6a995ee3af924cb478876e6eecf2e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  loadOnStart: 1
 --- !u!1 &1546840963
 GameObject:
   m_ObjectHideFlags: 0
@@ -2842,6 +2857,7 @@ GameObject:
   - component: {fileID: 1845702977}
   - component: {fileID: 1845702976}
   - component: {fileID: 1845702975}
+  - component: {fileID: 1845702978}
   m_Layer: 0
   m_Name: Steel
   m_TagString: Untagged
@@ -2903,6 +2919,19 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
+--- !u!114 &1845702978
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1845702974}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7e4539a36f0b1cd43928f8f0b392b681, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  uniqueIdentifier: 
 --- !u!1001 &1872449235
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -3094,6 +3123,7 @@ GameObject:
   - component: {fileID: 2054700421}
   - component: {fileID: 2054700420}
   - component: {fileID: 2054700419}
+  - component: {fileID: 2054700422}
   m_Layer: 0
   m_Name: Iron
   m_TagString: Untagged
@@ -3153,6 +3183,19 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
+--- !u!114 &2054700422
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2054700418}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7e4539a36f0b1cd43928f8f0b392b681, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  uniqueIdentifier: 
 --- !u!1001 &2061873656
 PrefabInstance:
   m_ObjectHideFlags: 0
