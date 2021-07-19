@@ -13,6 +13,7 @@ namespace Factory.ItemEditor.Editor {
         [NonSerialized] Vector2 draggingOffset;
         [NonSerialized] ItemNode deletingNode = null;
         [NonSerialized] ItemNode linkingParentNode = null;
+        [NonSerialized] ItemNode unLinkingParentNode = null;
         Vector2 scrollPosition;
         [NonSerialized] bool draggingCanvas = false;
         [NonSerialized] Vector2 draggingCanvasOffset;
@@ -62,9 +63,12 @@ namespace Factory.ItemEditor.Editor {
                 scrollPosition = EditorGUILayout.BeginScrollView(scrollPosition);
 
                 Rect canvas = GUILayoutUtility.GetRect(canvasSize, canvasSize);
+                CreateToolbar();
                 //Texture2D backgroundText = Resources.Load("background") as Texture2D;
-               // Rect texCoords = new Rect(0, 0, canvasSize / backgroundSize, canvasSize / backgroundSize);
-              //  GUI.DrawTextureWithTexCoords(canvas, backgroundText, texCoords);
+                // Rect texCoords = new Rect(0, 0, canvasSize / backgroundSize, canvasSize / backgroundSize);
+                //  GUI.DrawTextureWithTexCoords(canvas, backgroundText, texCoords);
+
+
                 foreach (ItemNode node in selectedHierarcy.GetAllNodes()) {
                     DrawNode(node);
                     DrawConnections(node);
@@ -73,117 +77,173 @@ namespace Factory.ItemEditor.Editor {
                 if (creatingNode != null) {
                     Undo.RecordObject(selectedHierarcy, "Added Dialogue Node");
                     
-                    selectedHierarcy.CreateNode(creatingNode);
+                 //   selectedHierarcy.CreateNode(creatingNode);
                     creatingNode = null;
                 }
 
-                if (creatingNode != null) {
-                    Undo.RecordObject(selectedHierarcy, "Added Dialogue Node");
-                    selectedHierarcy.DeleteNode(creatingNode);
+                if (deletingNode != null) {
+                   // Undo.RecordObject(selectedHierarcy, "Added Dialogue Node");
+                    selectedHierarcy.DeleteNode(deletingNode);
                     deletingNode = null;
                 }
             }
         }
 
+        private void CreateToolbar() {
+            GUILayout.BeginArea(new Rect(0,0,225,25));
+            EditorGUILayout.BeginHorizontal();
+            if(GUILayout.Button("Create Item")) {
+
+            }
+            if(GUILayout.Button("Save children")) {
+                selectedHierarcy.SaveNodeChildren();
+            }
+            EditorGUILayout.EndHorizontal();
+            GUILayout.EndArea();
+        }
+
         private void ProcessEvents() {
-            Debug.Log("dragging node is " + draggingNode);
-            if (Event.current.type == EventType.MouseDown && draggingNode == null) {
-                draggingNode = GetNodeAtPoint(Event.current.mousePosition + scrollPosition);
-                if (draggingNode != null) {
+            Debug.Log("linking node " + linkingParentNode + " unlinking node " + unLinkingParentNode);
+           // Debug.Log(Event.current.type);
+            if (Event.current.type == EventType.MouseDown) {
+                ItemNode selectedNode = GetNodeAtPoint(Event.current.mousePosition + scrollPosition);
+        
+                if (linkingParentNode != null) {
+                    if(selectedNode != null) linkingParentNode.AddChild(selectedNode.guid);
+                    if(!Input.GetKey(KeyCode.LeftShift)) {
+                        linkingParentNode = null;
+                    }
+                } else if (unLinkingParentNode != null) {
+                    if(selectedNode != null) unLinkingParentNode.RemoveChild(selectedNode.guid);
+                    if (!Input.GetKey(KeyCode.LeftShift)) {
+                        unLinkingParentNode = null;
+                    }
+                } else if(selectedNode != null){
+                    draggingNode = selectedNode;
                     draggingOffset = draggingNode.rect.position - Event.current.mousePosition;
                     Selection.activeObject = draggingNode;
-                } else {
-                    draggingCanvas = true;
-                    draggingCanvasOffset = Event.current.mousePosition + scrollPosition;
+                }else {
+                draggingCanvas = true;
+                draggingCanvasOffset = Event.current.mousePosition + scrollPosition;
                 }
-            } else if (Event.current.type == EventType.MouseDrag && draggingNode != null) {
-                Debug.Log("moving dragging node");
-                Undo.RecordObject(selectedHierarcy, "move dialouge node");
-                draggingNode.SetPosition(Event.current.mousePosition + draggingOffset);
-        /*        Rect temp = draggingNode.rect;
-                temp.position = ;*/
+            } else if (Event.current.type == EventType.MouseDrag) {
+                if(draggingNode != null) {
+                    Undo.RecordObject(selectedHierarcy, "move dialouge node");
+                    draggingNode.SetPosition(Event.current.mousePosition + draggingOffset);
+                } else if(draggingCanvas) {
+                    scrollPosition = draggingCanvasOffset - Event.current.mousePosition;
+                } 
                 GUI.changed = true;
-            } else if (Event.current.type == EventType.MouseDrag && draggingCanvas) {
-                scrollPosition = draggingCanvasOffset - Event.current.mousePosition;
-                GUI.changed = true;
-            } else if (Event.current.type == EventType.MouseUp && draggingNode != null) {
-                draggingNode = null;
-            } else if (Event.current.type == EventType.MouseUp && draggingCanvas) {
-                draggingCanvas = false;
+            } else if (Event.current.type == EventType.MouseUp) {
+                /*if(linkingParentNode != null) {
+                    Debug.Log("Mouse down set Linking node");
+                    ItemNode childNode = GetNodeAtPoint(Input.mousePosition);
+                    Debug.Log("child node is " + childNode);
+                    if(childNode != null) {
+                        linkingParentNode.AddChild(childNode.guid);
+                        Debug.Log("added child");
+                    }
+                    linkingParentNode = null;
+                } else if(unLinkingParentNode != null) {
+                    ItemNode childNode = GetNodeAtPoint(Input.mousePosition);
+                    if (childNode != null) {
+                        unLinkingParentNode.children.Remove(childNode.guid);
+                    }
+                    unLinkingParentNode = null;
+                }*/
+                if(draggingNode != null) {
+                    draggingNode = null;
+                } else if(draggingCanvas) {
+                    draggingCanvas = false;
+                }  
             }
         }
 
 
         private void DrawNode(ItemNode node) {
             GUILayout.BeginArea(node.rect, nodeStyle);
-            EditorGUI.BeginChangeCheck();
+            // EditorGUI.BeginChangeCheck();
 
+            EditorGUILayout.BeginVertical();
+                DrawSprite(node, node.rect);
+                EditorGUILayout.LabelField(node.item.itemName, EditorStyles.whiteLabel);
+                EditorGUILayout.LabelField(node.item.producableBuilding.ToString(), EditorStyles.whiteLabel);
+            EditorGUILayout.EndVertical();
 
-            EditorGUILayout.LabelField("Node: ", EditorStyles.whiteLabel);
-            string newText = EditorGUILayout.TextField(node.text);
-
-            if (EditorGUI.EndChangeCheck()) {
+           /* if (EditorGUI.EndChangeCheck()) {
 
                 Undo.RecordObject(node, "Update dialogue Text");
-                node.text = newText;
-            }
+               // node.text = newText;
+            }*/
 
-            foreach (ItemNode childNode in selectedHierarcy.GetAllChildren(node)) {
+/*            foreach (ItemNode childNode in selectedHierarcy.GetAllChildren(node)) {
                 EditorGUILayout.LabelField(childNode.text);
-            }
+            }*/
 
-            GUILayout.BeginHorizontal();
-            if (GUILayout.Button("+")) {
-                creatingNode = node;
+             GUILayout.BeginHorizontal();
+           if (GUILayout.Button("x")) {
+                deletingNode = node;
             }
 
             DrawLinkButtones(node);
 
-            if (GUILayout.Button("x")) {
-                deletingNode = node;
+            if (GUILayout.Button("+")) {
+                creatingNode = node;
             }
             GUILayout.EndHorizontal();
             GUILayout.EndArea();
         }
 
         private void DrawLinkButtones(ItemNode node) {
-            if (linkingParentNode == null) {
-                if (GUILayout.Button("link")) {
-                    linkingParentNode = node;
-                }
+            if (GUILayout.Button("link")) {
+                linkingParentNode = node;
+                Debug.Log("set linking parent node");
+            }
 
-            } else if (linkingParentNode == node) {
-                if (GUILayout.Button("cancel")) {
-                    linkingParentNode = null;
-                }
-
-            } else if (linkingParentNode.children.Contains(node.guid)) {
+            if (node.children.Count != 0) {
                 if (GUILayout.Button("unlink")) {
-                    linkingParentNode.children.Remove(node.guid);
-                    linkingParentNode = null;
-                }
-            } else {
-                if (GUILayout.Button("child")) {
-                    linkingParentNode.children.Add(node.guid);
-                    linkingParentNode = null;
+                    unLinkingParentNode = node;
+                    Debug.Log("set unlinking parent node");
+
                 }
             }
         }
 
         private void DrawConnections(ItemNode node) {
-            Vector3 startPosition = new Vector2(node.rect.xMax, node.rect.center.y);
+            Vector3 startPosition = new Vector2(node.rect.xMin, node.rect.center.y);
             foreach (ItemNode childNode in selectedHierarcy.GetAllChildren(node)) {
-                Vector3 endPosition = new Vector2(childNode.rect.xMin, childNode.rect.center.y);
-                Vector3 controlPointOffset = endPosition - startPosition;
-                controlPointOffset.y = 0;
-                controlPointOffset *= 0.8f;
-                Handles.DrawBezier(startPosition, endPosition,
-                    startPosition + controlPointOffset,
-                    endPosition - controlPointOffset,
-                    Color.white, null, 4f);
+                Vector3 endPosition = new Vector2(childNode.rect.xMax, childNode.rect.center.y);
+                DrawConnection(startPosition, endPosition);
             }
         }
 
+        void DrawConnection(Vector3 startPosition, Vector3 endPosition) {
+            Vector3 controlPointOffset = endPosition - startPosition;
+            controlPointOffset.y = 0;
+            controlPointOffset *= 0.8f;
+            Handles.DrawBezier(startPosition, endPosition,
+                startPosition + controlPointOffset,
+                endPosition - controlPointOffset,
+                Color.white, null, 4f);
+        }
+
+        void DrawSprite(ItemNode node, Rect areaRect) {
+            Sprite itemSprite = node.item.sprite;
+            Rect itemRect = itemSprite.rect;
+            float scaleFactor = (areaRect.width - 50) / itemRect.width;
+            float spriteW = itemRect.width * scaleFactor;
+            float spriteH = itemRect.height * scaleFactor;
+            Rect c = GUILayoutUtility.GetRect(spriteW,spriteH);
+            c.x = 20;
+            c.y = 20;
+            
+           // Rect rect = GUILayoutUtility.GetRect(spriteW, spriteH);
+            if (Event.current.type == EventType.Repaint) {
+                var tex = itemSprite.texture;
+
+                GUI.DrawTextureWithTexCoords(c, tex, new Rect(0, 0, 1, 1));
+            }
+        }
         private ItemNode GetNodeAtPoint(Vector2 point) {
             ItemNode foundNode = null;
             foreach (ItemNode node in selectedHierarcy.GetAllNodes()) {
@@ -191,7 +251,6 @@ namespace Factory.ItemEditor.Editor {
                     foundNode = node;
                 }
             }
-            Debug.Log("get node at point returned " + foundNode);
             return foundNode;
         }
 

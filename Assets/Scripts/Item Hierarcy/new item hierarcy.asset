@@ -1,0 +1,90 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &-7983813495232421629
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1bc820b6b68542b468eb819dcba43ad6, type: 3}
+  m_Name: gun
+  m_EditorClassIdentifier: 
+  guid: 62eb3f95-d30b-4ed0-a32d-e12f311e758f
+  item: {fileID: 5759392041793277512, guid: 46f383cfe5d758c468497324cd704202, type: 3}
+--- !u!114 &-1759733222993210252
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1bc820b6b68542b468eb819dcba43ad6, type: 3}
+  m_Name: wood
+  m_EditorClassIdentifier: 
+  guid: 420f068b-951b-41eb-8654-bbbf1435797e
+  item: {fileID: 44621397707821111, guid: 6d6ef0131c198f34e8d97e8a94cdf093, type: 3}
+--- !u!114 &-1635830228419265507
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1bc820b6b68542b468eb819dcba43ad6, type: 3}
+  m_Name: metal
+  m_EditorClassIdentifier: 
+  guid: 0714eec2-af7c-4c4e-b695-9c5c61fffb03
+  item: {fileID: 4620507054958866899, guid: 53ed65f866c35d746a2fcf6e7b92631d, type: 3}
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cb0671d195c93fd4bb2fab4d64b74b63, type: 3}
+  m_Name: new item hierarcy
+  m_EditorClassIdentifier: 
+  nodes:
+  - {fileID: 1599924021786177948}
+  - {fileID: -7983813495232421629}
+  - {fileID: 3681973118596250365}
+  - {fileID: -1635830228419265507}
+  - {fileID: -1759733222993210252}
+--- !u!114 &1599924021786177948
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1bc820b6b68542b468eb819dcba43ad6, type: 3}
+  m_Name: bullets
+  m_EditorClassIdentifier: 
+  guid: 1ce4a766-4c59-489c-b6cf-066a9d68a092
+  item: {fileID: 7099050242453161963, guid: 4e419e9d98823ad4595da2a6a0ae35ac, type: 3}
+--- !u!114 &3681973118596250365
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1bc820b6b68542b468eb819dcba43ad6, type: 3}
+  m_Name: gunPowder
+  m_EditorClassIdentifier: 
+  guid: 61096dfe-f6e3-46b1-81e3-aa94bfc6f89e
+  item: {fileID: 1211200759242025845, guid: 0db3b2529a4767546a9c7cb6cc27a274, type: 3}

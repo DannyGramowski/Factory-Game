@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using Factory.Core;
+using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
 
@@ -11,10 +12,11 @@ namespace Factory.ItemEditor {
         }
         public List<string> children { get => _children; }
         public Rect rect { get => _rect; }
+        public Item item;
 
         private string _text;
         private List<string> _children = new List<string>();
-        private Rect _rect = new Rect(0, 0, 200, 100);
+        private Rect _rect = new Rect(0, 0, 200, 250);
 
 #if UNITY_EDITOR
         void SetText(string text) {
@@ -33,7 +35,11 @@ namespace Factory.ItemEditor {
             Undo.RecordObject(this, "add dialogue link");
             children.Add(childID);
         }
-
+        public void RemoveChildren() {
+            foreach(string id in children) {
+                RemoveChild(id);
+            }
+        }
         public void RemoveChild(string childID) {
             Undo.RecordObject(this, "remove dialogue link");
             children.Remove(childID);

@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
 using UnityEditor;
+using Factory.Core;
 
 namespace Factory.ItemEditor {
     [CreateAssetMenu(fileName = "new item hierarcy", menuName = "Item Hierarcy")]
@@ -15,24 +16,19 @@ namespace Factory.ItemEditor {
 #if UNITY_EDITOR
         private void Awake() {
             if (nodes.Count == 0) {
-                CreateNode(null);
+                CreateItemNodes();
+               // CreateNode(null);
             }
         }
 #endif
 
+       
+
         private void OnValidate() {
-            Debug.Log("on Validate");
-        
             nodeLookup = new Dictionary<string, ItemNode>();
             foreach(ItemNode node in nodes) {
-                Debug.Log("on validate node " + node);
-                if(node == null) {
-                    Debug.Log("null node");
-                    return;
-                }
-                nodeLookup
-                    [node.guid] =
-                    node;
+                if(node == null)  return;
+                nodeLookup[node.guid] = node;
             }
         }
         public IEnumerable<ItemNode> GetAllNodes() {
@@ -51,24 +47,40 @@ namespace Factory.ItemEditor {
 
         }
 
-        public void CreateNode(ItemNode parent) {
-        Debug.Log("create node");
+        public void SaveNodeChildren() {
+            foreach(ItemNode itemNode in nodes) {
+                Item item = itemNode.item;
+                item.recipe.Clear();
+                foreach(string id in itemNode.children) {
+                    item.recipe.Add(nodeLookup[id].item);
+                }
+                PrefabUtility.SavePrefabAsset(item.gameObject);
+            }
+        }
+
+        private void CreateItemNodes() {
+            foreach(Item item in GlobalPointers.itemPrefabs) {
+                CreateNode(null, item);
+            }
+        }
+
+        public void CreateNode(ItemNode parent, Item item) {
             ItemNode node = CreateInstance<ItemNode>();
             node.guid = Guid.NewGuid().ToString();
-            Debug.Log("node " + node + " with type " + node.GetType());
+            node.item = item;
+            node.name = node.item.itemName;
             Undo.RegisterCreatedObjectUndo(node, "Created Dialogue Node");
             if (parent != null) {
+                node.SetPosition(new Vector2(parent.rect.position.x + parent.rect.size.x + 15, parent.rect.position.y));
                 parent.children.Add(node.guid);
             }
 
             nodes.Add(node);
             Undo.RecordObject(this, "Remove Dialogue Link");
             OnValidate();
-
-            foreach(ItemNode temp in nodes) {
-                Debug.Log(temp + " in nodes");
-            }
         }
+
+       
 
         /*        public void CreateNode() {
                     DialogueNode rootNode = CreateInstance<DialogueNode>();
@@ -78,8 +90,8 @@ namespace Factory.ItemEditor {
 
         public void DeleteNode(ItemNode deleteNode) {
             Undo.RecordObject(this, "Remove Dialogue Link");
-            nodes.Remove(deleteNode);
             RemoveFromChildren(deleteNode);
+            nodes.Remove(deleteNode);
             OnValidate();
             Undo.DestroyObjectImmediate(deleteNode);
 
@@ -87,19 +99,19 @@ namespace Factory.ItemEditor {
 
         private void RemoveFromChildren(ItemNode deleteNode) {
             foreach (ItemNode node in GetAllNodes()) {
+
                 node.children.Remove(deleteNode.guid);
             }
         }
 
         public void OnBeforeSerialize() {
             if (nodes.Count == 0) {
-                CreateNode(null);
+               // CreateNode(null);
             }
 
             if (AssetDatabase.GetAssetPath(this) != "") {
                 foreach (ItemNode node in GetAllNodes()) {
                     if (AssetDatabase.GetAssetPath(node) == "") {
-                        Debug.Log("added node to " + name);
                         AssetDatabase.AddObjectToAsset(node, this);
                     }
                 }

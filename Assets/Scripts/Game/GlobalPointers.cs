@@ -24,7 +24,9 @@ namespace Factory.Core {
 
         [SerializeField] bool showDebugInput;
 
-
+        private void OnValidate() {
+            Awake();
+        }
         void Awake() {
             testMap.gameObject.SetActive(false);
 
@@ -34,8 +36,10 @@ namespace Factory.Core {
             showDebug = showDebugInput;
 
             beltSystemPrefab = (Resources.Load("BeltSystem") as GameObject).GetComponent<BeltSystem>();
-            itemPrefabs = Resources.LoadAll<Item>("Items").ToList();
-            buildingPrefabs = Resources.LoadAll<Building>("Building");
+            itemPrefabs = Utils.GetAssets<Item>("", new[] { Utils.ITEM_FOLDER_PATH });
+            buildingPrefabs = Utils.GetAssets<Building>("", new[] { Utils.BUILDING_FOLDER_PATH }).ToArray();
+/*            itemPrefabs = Resources.LoadAll<Item>("Items").ToList();
+            buildingPrefabs = Resources.LoadAll<Building>("Building");*/
             for (int i = 0; i < buildingPrefabs.Length; i++) {
                 buildingPrefabs[i].buildingType = i;
             }

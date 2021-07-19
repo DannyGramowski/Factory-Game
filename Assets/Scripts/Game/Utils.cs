@@ -6,7 +6,8 @@ namespace Factory.Core {
 
     public static class Utils {
         public static Vector3 ROTATE90Y = new Vector3(0, 90, 0);
-        public static readonly string ITEM_FOLDER_PATH = "Assets/Prefabs/Items";
+        public static readonly string ITEM_FOLDER_PATH = "Assets/Prefabs/Resources/Items";
+        public static readonly string BUILDING_FOLDER_PATH = "Assets/Prefabs/Resources/Building";
         public static readonly string SAVE_PATH = Application.dataPath + "/saves";
         public static readonly string DEFAULT_FILE_NAME = "default";
         public static readonly string FILE_ENDING = ".sv";
