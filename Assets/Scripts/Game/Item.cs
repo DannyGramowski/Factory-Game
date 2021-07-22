@@ -10,7 +10,7 @@ namespace Factory.Core {
         public string itemName;
         public Sprite sprite;
         public int stackSize = 100;
-        public float productionCost;
+        public float productionCost = 300;
 
         [SerializeField] float errorDistance = 0.5f;
         [SerializeField] float checkDistance = 0.2f;

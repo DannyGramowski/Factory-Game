@@ -60,20 +60,17 @@ namespace Factory.ItemEditor {
 
         private void CreateItemNodes() {
             foreach(Item item in GlobalPointers.itemPrefabs) {
-                CreateNode(null, item);
+                CreateNode(item);
             }
         }
 
-        public void CreateNode(ItemNode parent, Item item) {
+        public void CreateNode(Item item) {
             ItemNode node = CreateInstance<ItemNode>();
             node.guid = Guid.NewGuid().ToString();
             node.item = item;
             node.name = node.item.itemName;
             Undo.RegisterCreatedObjectUndo(node, "Created Dialogue Node");
-            if (parent != null) {
-                node.SetPosition(new Vector2(parent.rect.position.x + parent.rect.size.x + 15, parent.rect.position.y));
-                parent.children.Add(node.guid);
-            }
+          
 
             nodes.Add(node);
             Undo.RecordObject(this, "Remove Dialogue Link");

@@ -9,6 +9,7 @@ namespace Factory.Core {
     public class GlobalPointers : Singleton<GlobalPointers> {
         public static Transform ItemParent;
         public static Transform buildingParent;
+        public static Transform testMap;
         public static bool showDebug;
 
         public static float itemHeight = 1.34f;
@@ -17,10 +18,11 @@ namespace Factory.Core {
         public static BeltSystem beltSystemPrefab;
        public static Building[] buildingPrefabs;
         public static List<Item> itemPrefabs;
+        public Item templateItem;
 
         [SerializeField] Transform itemParentInput;
         [SerializeField] Transform buildingParentInput;
-        [SerializeField] Transform testMap;
+        [SerializeField] Transform testMapInput;
 
         [SerializeField] bool showDebugInput;
 
@@ -28,6 +30,7 @@ namespace Factory.Core {
             Awake();
         }
         void Awake() {
+            testMap = testMapInput;
             testMap.gameObject.SetActive(false);
 
             mainCamera = Camera.main;

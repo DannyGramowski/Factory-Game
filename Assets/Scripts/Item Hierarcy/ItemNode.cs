@@ -6,26 +6,14 @@ using UnityEngine;
 namespace Factory.ItemEditor {
     public class ItemNode : ScriptableObject {
         public string guid;
-        public string text {
-            get => _text;
-            set => SetText(value);
-        }
         public List<string> children { get => _children; }
         public Rect rect { get => _rect; }
         public Item item;
 
-        private string _text;
         private List<string> _children = new List<string>();
-        private Rect _rect = new Rect(0, 0, 200, 250);
+        private Rect _rect = new Rect(0, 0, 125, 175);
 
 #if UNITY_EDITOR
-        void SetText(string text) {
-            if (text != _text) {
-                Undo.RecordObject(this, "update dialogue text");
-                _text = text;
-            }
-        }
-
         public void SetPosition(Vector2 newPosition) {
             Undo.RecordObject(this, "update dialogue text");
             _rect.position = newPosition;

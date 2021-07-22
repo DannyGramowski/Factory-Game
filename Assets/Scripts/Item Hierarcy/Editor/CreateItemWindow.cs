@@ -3,14 +3,14 @@ using UnityEditor;
 using UnityEngine;
 
 public delegate void CloseWindow();
-public delegate void OnCreate();
+public delegate void OnCreate(Item newItem);
 
 public class CreateItemWindow : EditorWindow {
     Item newItem;
     MeshRenderer renderer;
     Material mat;
 
-    string itemName;
+    string itemName = "";
     Sprite sprite;
     Color color;
     int stackSize;
@@ -28,16 +28,27 @@ public class CreateItemWindow : EditorWindow {
         return window;
     }
 
+    [MenuItem("Window/Item editor")]
 
-    private void OnEnable() {
+    public static CreateItemWindow Open() {
+        CreateItemWindow window = GetWindow<CreateItemWindow>("create Item");
+        window.minSize = new Vector2(85, 85);
+        
+        return window;
+    }
+
+    private void OnEnable() { 
+        GlobalPointers.testMap.gameObject.SetActive(true);
         itemTransform = GameObject.FindGameObjectWithTag("Testing").transform.GetChild(1);
-
+        if(newItem == null) {
+            CreateItem(GlobalPointers.Instance.templateItem);
+        }
     }
 
     private void OnDisable() {
         Debug.Log("on disable");
         if (closeWindow != null) closeWindow();
-        AssetDatabase.DeleteAsset($"Assets/Prefabs/Items/Materials/{mat.name}.mat");
+        AssetDatabase.DeleteAsset($"Assets/Prefabs/Resources/Items/Materials/{mat.name}.mat");
         foreach (Item t in itemTransform.GetComponentsInChildren<Item>()) {
             DestroyImmediate(t.gameObject);
         }
@@ -52,6 +63,7 @@ public class CreateItemWindow : EditorWindow {
     }
 
     private void OnGUI() {
+        Debug.Log("active mat " + mat);
         EditorGUILayout.BeginHorizontal();
 
         EditorGUILayout.BeginVertical();
@@ -60,8 +72,13 @@ public class CreateItemWindow : EditorWindow {
 
         //item input fields
         EditorGUILayout.BeginVertical();
+        string oldName = itemName;
         itemName = EditorGUILayout.TextField("item name", itemName);
-        mat.name = itemName + "Mat";
+        if (!string.IsNullOrEmpty(itemName) && oldName != itemName) {
+            Debug.Log("changed name of " + mat + " to " + mat.name);
+            mat.name = itemName + " Mat";
+            
+        }
 
         sprite = EditorGUILayout.ObjectField("item sprite", sprite, typeof(Sprite)) as Sprite;
         newItem.SetSprite(sprite);
@@ -94,12 +111,14 @@ public class CreateItemWindow : EditorWindow {
             Debug.LogError($"{itemName} already exists");
             return;
         }
-        onCreate();
 
         //Debug.Log($"before create new item there were {graphView.items.Count} items");
-        bool output;
-        GameObject obj = MonoBehaviour.Instantiate(newItem.gameObject, itemTransform);
-        Item item = obj.GetComponent<Item>();
+        //  GameObject obj = MonoBehaviour.Instantiate(newItem.gameObject, itemTransform);
+
+        GameObject obj = MonoBehaviour.Instantiate(newItem.gameObject);
+        Debug.Log(obj);
+        Debug.Log(obj + " with type " + obj.GetType());
+        Item item = obj.GetComponentInParent<Item>();
         if (item) {
             item.itemName = itemName;
             item.sprite = sprite;
@@ -109,21 +128,31 @@ public class CreateItemWindow : EditorWindow {
             //Destroy(obj);
             return;
         }
-        CreateNewMat();
-        Object obj1 = PrefabUtility.SaveAsPrefabAsset(obj,
-            $"{Utils.ITEM_FOLDER_PATH}/{itemName}.prefab",
-            out output);
+        Object obj1 = PrefabUtility.SaveAsPrefabAsset(obj, $"{Utils.ITEM_FOLDER_PATH}/{itemName}.prefab", out bool output1);
         // Destroy(obj);
         //Debug.Log($"after create new item there were {graphView.items.Count} items");
+       // Debug.Log("on create " + onCreate.ToString() + " item " + item);
 
+        if(onCreate != null)onCreate(item);
+        CreateNewMat();
     }
 
     private void CreateNewMat() {
         Debug.Log("create new Mat");
-        string matPath = $"Assets/Prefabs/Items/Materials/{itemName}Mat.mat";
-        Material newMat = Instantiate(renderer.sharedMaterial);
-        mat = newMat;
+        string matPath = $"Assets/Prefabs/Resources/Items/Materials/{itemName}Mat.mat";
+       // Material newMat = 
+        mat = Instantiate(renderer.sharedMaterial);
+      //  Debug.Log("mat " + mat + " new mat " + newMat);
         renderer.material = mat;
-        AssetDatabase.CreateAsset(newMat, matPath);
+        AssetDatabase.CreateAsset(mat, matPath);
     }
+    /* private void CreateNewMat() {
+         Debug.Log("create new Mat");
+         string matPath = $"Assets/Prefabs/Resources/Items/Materials/{itemName}Mat.mat";
+         Material newMat = Instantiate(renderer.sharedMaterial);
+         mat = newMat;
+         Debug.Log("mat " + mat + " new mat " + newMat);
+         renderer.material = mat;
+         AssetDatabase.CreateAsset(newMat, matPath);
+     }*/
 }

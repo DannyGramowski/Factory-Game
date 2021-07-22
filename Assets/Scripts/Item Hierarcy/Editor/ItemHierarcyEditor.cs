@@ -3,6 +3,7 @@ using System.Collections;
 using UnityEditor;
 using UnityEditor.Callbacks;
 using UnityEngine;
+using Factory.Core;
 
 namespace Factory.ItemEditor.Editor {
     public class ItemHierarcyEditor : EditorWindow {
@@ -93,13 +94,23 @@ namespace Factory.ItemEditor.Editor {
             GUILayout.BeginArea(new Rect(0,0,225,25));
             EditorGUILayout.BeginHorizontal();
             if(GUILayout.Button("Create Item")) {
-
+                OnCreate onCreate = OnCreateItem;
+                CloseWindow closeWindow = OnCloseWindow;
+                CreateItemWindow.Open(closeWindow,onCreate);
             }
             if(GUILayout.Button("Save children")) {
                 selectedHierarcy.SaveNodeChildren();
             }
             EditorGUILayout.EndHorizontal();
             GUILayout.EndArea();
+        }
+
+        void OnCreateItem(Item newItem) {
+            selectedHierarcy.CreateNode(newItem);
+        }
+
+        void OnCloseWindow() {
+
         }
 
         private void ProcessEvents() {
@@ -187,9 +198,6 @@ namespace Factory.ItemEditor.Editor {
 
             DrawLinkButtones(node);
 
-            if (GUILayout.Button("+")) {
-                creatingNode = node;
-            }
             GUILayout.EndHorizontal();
             GUILayout.EndArea();
         }
