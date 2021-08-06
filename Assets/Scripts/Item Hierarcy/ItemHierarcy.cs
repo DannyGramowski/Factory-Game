@@ -65,6 +65,7 @@ namespace Factory.ItemEditor {
         }
 
         public void CreateNode(Item item) {
+
             ItemNode node = CreateInstance<ItemNode>();
             node.guid = Guid.NewGuid().ToString();
             node.item = item;

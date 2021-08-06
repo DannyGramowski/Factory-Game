@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
+using UnityEditor;
 using Factory.Buildings;
 using System.Linq;
 
@@ -46,6 +47,11 @@ namespace Factory.Core {
             for (int i = 0; i < buildingPrefabs.Length; i++) {
                 buildingPrefabs[i].buildingType = i;
             }
+        }
+
+        [MenuItem("Utilities/Reload GlobalPointers")]
+        public static void ReloadInputs() {
+            Instance.Awake();
         }
 
     }

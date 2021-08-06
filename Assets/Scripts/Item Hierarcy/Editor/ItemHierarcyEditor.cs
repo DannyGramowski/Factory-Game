@@ -106,6 +106,7 @@ namespace Factory.ItemEditor.Editor {
         }
 
         void OnCreateItem(Item newItem) {
+            Debug.Log("on create item with item of " + newItem);
             selectedHierarcy.CreateNode(newItem);
         }
 
@@ -114,7 +115,6 @@ namespace Factory.ItemEditor.Editor {
         }
 
         private void ProcessEvents() {
-            Debug.Log("linking node " + linkingParentNode + " unlinking node " + unLinkingParentNode);
            // Debug.Log(Event.current.type);
             if (Event.current.type == EventType.MouseDown) {
                 ItemNode selectedNode = GetNodeAtPoint(Event.current.mousePosition + scrollPosition);
@@ -123,6 +123,7 @@ namespace Factory.ItemEditor.Editor {
                     if(selectedNode != null) linkingParentNode.AddChild(selectedNode.guid);
                     if(!Input.GetKey(KeyCode.LeftShift)) {
                         linkingParentNode = null;
+                        
                     }
                 } else if (unLinkingParentNode != null) {
                     if(selectedNode != null) unLinkingParentNode.RemoveChild(selectedNode.guid);
@@ -130,9 +131,11 @@ namespace Factory.ItemEditor.Editor {
                         unLinkingParentNode = null;
                     }
                 } else if(selectedNode != null){
+
+                    
                     draggingNode = selectedNode;
                     draggingOffset = draggingNode.rect.position - Event.current.mousePosition;
-                    Selection.activeObject = draggingNode;
+                    Selection.activeObject = draggingNode.item;
                 }else {
                 draggingCanvas = true;
                 draggingCanvasOffset = Event.current.mousePosition + scrollPosition;

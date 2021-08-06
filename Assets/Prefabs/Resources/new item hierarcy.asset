@@ -1,0 +1,135 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &-8995690743913286019
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1bc820b6b68542b468eb819dcba43ad6, type: 3}
+  m_Name: gunpowder
+  m_EditorClassIdentifier: 
+  guid: a1c2ba03-1d51-473f-b4de-7e357861c8af
+  item: {fileID: 3317328498264763532, guid: a3062a78f069e914d8e21cd639d531a0, type: 3}
+--- !u!114 &-4595588193581729167
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1bc820b6b68542b468eb819dcba43ad6, type: 3}
+  m_Name: gun
+  m_EditorClassIdentifier: 
+  guid: e8106d2f-522b-47bb-b897-6de23e10d2dd
+  item: {fileID: 4554661198245998774, guid: 0a807d6eb97d189409936aaff0e49ac2, type: 3}
+--- !u!114 &-2266962848641349396
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1bc820b6b68542b468eb819dcba43ad6, type: 3}
+  m_Name: wood
+  m_EditorClassIdentifier: 
+  guid: db0d8062-469f-489b-b807-5db42bcc5d58
+  item: {fileID: 8510304918478705665, guid: 9e87ad69684aa0246a3d889e796d1cf9, type: 3}
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cb0671d195c93fd4bb2fab4d64b74b63, type: 3}
+  m_Name: new item hierarcy
+  m_EditorClassIdentifier: 
+  nodes:
+  - {fileID: -4595588193581729167}
+  - {fileID: -2266962848641349396}
+  - {fileID: -8995690743913286019}
+  - {fileID: 7675544992162543840}
+  - {fileID: 8057211021386453584}
+  - {fileID: 5391541920314990484}
+  - {fileID: 8608249699597415592}
+  - {fileID: 3730009983026191007}
+--- !u!114 &3730009983026191007
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1bc820b6b68542b468eb819dcba43ad6, type: 3}
+  m_Name: bullets
+  m_EditorClassIdentifier: 
+  guid: f6c066f6-94ec-4cf0-8d02-43e8e7349da8
+  item: {fileID: 5661338150769141352, guid: 1f18eec9a5394a5499f16bccc8aa0c21, type: 3}
+--- !u!114 &5391541920314990484
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1bc820b6b68542b468eb819dcba43ad6, type: 3}
+  m_Name: steel
+  m_EditorClassIdentifier: 
+  guid: 0b8b544d-9d16-415b-a70c-56a76ad92938
+  item: {fileID: 6338291719363119711, guid: 04ab704ec8f97f245a8c9fe3380bdf26, type: 3}
+--- !u!114 &7675544992162543840
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1bc820b6b68542b468eb819dcba43ad6, type: 3}
+  m_Name: coal
+  m_EditorClassIdentifier: 
+  guid: a802dd5e-619e-4a23-9172-b31df18c5141
+  item: {fileID: 3247203472706313859, guid: e63ea407dfe0afe4891556ea9d67839c, type: 3}
+--- !u!114 &8057211021386453584
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1bc820b6b68542b468eb819dcba43ad6, type: 3}
+  m_Name: metal
+  m_EditorClassIdentifier: 
+  guid: fba0dcb9-0b51-47b2-9ed6-ccf6816d8766
+  item: {fileID: 8591821793975543996, guid: 4b0d6be62f7ee3843a481ecd6e5f0ee4, type: 3}
+--- !u!114 &8608249699597415592
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1bc820b6b68542b468eb819dcba43ad6, type: 3}
+  m_Name: gear
+  m_EditorClassIdentifier: 
+  guid: cc124fb8-3550-4198-b0ff-ba36635a25d4
+  item: {fileID: 6258121643627177010, guid: 046bb327c6220f44ba2d369c8659e24d, type: 3}
