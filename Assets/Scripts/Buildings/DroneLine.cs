@@ -7,7 +7,7 @@ using UnityEngine;
 
 namespace Factory.Buildings {
     public class DroneLine {
-        private List<Drone> _drone = new List<Drone>();
+        private List<Drone> _drones = new List<Drone>();
         private IDeliverable _deliveryPoint;
         private IPickupable _pickupPoint;
 
@@ -16,6 +16,13 @@ namespace Factory.Buildings {
             _deliveryPoint = deliveryPoint;
         }
 
+        public void AddDrones(List<Drone> drones) {
+            foreach (var drone in drones) {
+                SetDroneActions(drone);
+                drones.Add(drone);
+            }    
+        }
+        
         private void SetDroneActions(Drone drone) {
             IAction[] actionSet = {
                 new ADroneMove(drone, _pickupPoint.GetPosition()),
