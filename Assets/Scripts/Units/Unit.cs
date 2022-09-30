@@ -11,32 +11,49 @@ namespace Factory.Units {
         [SerializeField] protected string[] actionName;
         protected static readonly object[] EmptyArgs = Array.Empty<object>();
         protected IAction _action = null;
+        protected ActionSet _actionSet = null;
+        protected HashSet<string> validActionNames = new HashSet<string>();
         protected object[] onTickParams = null;
         protected object[] onExitParams = null;
 
         public void Start() {
-            
+            foreach (var str in actionName) {
+                if(!GlobalActionList.ActionNames.Contains(str)) Debug.LogError("not valid action name");
+                validActionNames.Add(str);
+            }
         }
 
         private void Update() {
             if (_action != null) {//if there is an action
-                _action.OnTick(onTickParams);
+                _action.OnTick();
                 if (_action.IsFinished()) {
-                    _action.OnExit(onExitParams);
+                    _action.OnExit();
                     _action = null;
                 }
             }
         }
 
-        public virtual bool ExecuteAction(IAction action, object[][] param) {
+        #region Action
+
+        public void SetActionSet(ActionSet actionSet) {
+            _actionSet = actionSet;
+        }
+        
+        public virtual bool ExecuteAction(IAction action) {
             if(!ValidAction(action)) return false;
             _action = action;
-            _action.OnInitiate(param[0]);
-            onTickParams = param[1];
-            onExitParams = param[2];
+            _action.OnInitiate();
             return true;
         }
 
-        public abstract bool ValidAction(IAction action);
+        public bool HasAction => _action is not null;
+
+        public IAction GetAction => _action;
+        
+        public bool ValidAction(IAction action) {
+            return validActionNames.Contains(action.ActionName());
+        }
+        #endregion
+        
     }
 }

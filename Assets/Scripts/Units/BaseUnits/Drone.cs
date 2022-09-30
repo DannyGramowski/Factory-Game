@@ -17,21 +17,6 @@ namespace Factory.Units.BaseUnits
 
         protected static Dictionary<string, IAction> _validActions;
 
-        new void Start() {
-            print("start");
-            //base.Start();
-            if (_validActions == null) {
-                _validActions = new Dictionary<string, IAction>();
-                foreach (var action in GlobalActionList.Actions) {
-                    if (actionName.Contains(action.ActionName())) {
-                        _validActions[action.ActionName()] = action;
-                    }
-                }
-            }
-
-            //ExecuteAction(new ADroneMove(), new object[][] { new object[]{transform, endPt, speed, turnSpeed}, EmptyArgs, EmptyArgs});
-        }
-
         public int MaxStackSize() => stackCapacity - _cargo.GetSize();
 
         public bool ValidItem(Item item) {
@@ -40,14 +25,16 @@ namespace Factory.Units.BaseUnits
         }
 
 
-        public void PickUpItem(ItemStack itemStack) {
+        public void PickUpItem(Item[] items) {
+            int i = 0;
             while (_cargo.GetSize() < stackCapacity) {
-                if(itemStack.IsEmpty()) return;
-                _cargo.AddItem(itemStack.GetItem());
+                if(items.Length <= i) return;
+                _cargo.AddItem(items[i]);
+                i++;
             }                
         }
 
-        
+        public Item GetItemType() => _cargo.StackType;
 
         public Item[] DeliverItem(int maxSize) {
             int deliverySize = maxSize > stackCapacity ? stackCapacity : maxSize;
@@ -58,7 +45,8 @@ namespace Factory.Units.BaseUnits
 
             return output;
         }
-         
-        public override bool ValidAction(IAction action) => _validActions != null && _validActions.ContainsKey(action.ActionName());
+
+        public float GetSpeed() => speed;
+        public float GetTurnSpeed() => turnSpeed;
     }
 }

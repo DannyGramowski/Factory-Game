@@ -1,10 +1,10 @@
 ﻿
 namespace Factory.Units.Actions {
     public interface IAction {
-        public void OnInitiate(object[] param);
-        public void OnTick(object[] param);
+        public void OnInitiate();
+        public void OnTick();
         public bool IsFinished();
         public string ActionName();
-        public void OnExit(object[] param);
+        public void OnExit();
     }
 }

@@ -6,16 +6,16 @@ using UnityEngine;
 
 namespace Factory.Units.Actions {
     public class GlobalActionList : Singleton<GlobalActionList> {
-        public static readonly List<IAction> Actions = new List<IAction>();
-
+        public static readonly HashSet<string> ActionNames = new HashSet<string>();
         
         private void Awake() {
-            Actions.Add(new ADroneMove());
-            Actions.Add(new AHarvestResource());
-            
             const string filename = "/Scripts/Units/ActionStuff/Actions";
-            var actionsFileCount = Directory.GetFiles(Application.dataPath + filename, "*.cs").Length;
-            Debug.Assert(Actions.Count == actionsFileCount, "actions loaded and actions available dont match");
+            var files = Directory.GetFiles(Application.dataPath + filename, "*.cs");
+            foreach (var file in files) {
+                var actionName = Path.GetFileName(file)[..^3];
+                print("name is " + actionName);
+                ActionNames.Add(actionName);
+            }
         }
     }
 }

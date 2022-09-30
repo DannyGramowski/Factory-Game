@@ -56,7 +56,7 @@ namespace Factory.Buildings {
         }
 
         public ProducableBuildings ProducableBuildingsType() {
-            return ProducableBuildings.miner;
+            return ProducableBuildings.gatherer;
         }
 
         public void SetItem(Item item) {

@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace Factory.MapFeatures {
     [SelectionBase]
-    public class ResourceNode : MonoBehaviour {
+    public class ResourceNode : MonoBehaviour, IPickupable{
         [SerializeField] private float timeToHarvest = 1;
         [SerializeField] private Item producingItem;
 
@@ -14,5 +14,11 @@ namespace Factory.MapFeatures {
         }
 
         public float GetHarvestTime() => timeToHarvest;
+
+        public Item[] Pickup(Item itemType) {
+            return null;
+        }
+
+        public Vector3 GetPosition() => transform.position;
     }
 }

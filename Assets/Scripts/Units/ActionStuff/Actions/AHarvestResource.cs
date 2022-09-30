@@ -11,19 +11,18 @@ namespace Factory.Units.Actions {
         private IHarvester _harvester;
         private float currTime = 0;
         private float timerLength = 0;
-        
-        public void OnInitiate(object[] param) {
-            Debug.Log("on inititate");
-            _node = (ResourceNode)param[0];
-            _harvester = (IHarvester)param[1];
-            timerLength = _node.GetHarvestTime();
-        }
 
-        public void OnTick(object[] param) {
-            Debug.Log("curr time " + currTime);
+
+        public AHarvestResource(ResourceNode node, IHarvester harvester) {
+            _node = node;
+            _harvester = harvester;
+            timerLength = _node.GetHarvestTime();            
+        }
+        public void OnInitiate() { }
+
+        public void OnTick() {
             currTime += Time.deltaTime;
             if (currTime >= timerLength) {
-                Debug.Log("Timer done");
                 currTime -= timerLength;
                 _harvester.Harvest(_node.HarvestResource());
             }
@@ -33,6 +32,6 @@ namespace Factory.Units.Actions {
 
         public string ActionName() => "AHarvestResource";
         
-        public void OnExit(object[] param) { }
+        public void OnExit() { }
     }
 }

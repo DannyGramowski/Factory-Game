@@ -193,7 +193,7 @@ namespace Factory.Core {
 
     //type of building its produced in
     public enum ProducableBuildings {
-        miner,
+        gatherer,
         assember,
         all,
         none
