@@ -95,7 +95,7 @@ namespace Factory.Buildings {
             if (producingItem == null) return null;
 
             ItemStack temp = GetFromInventory(producingItem);
-            if ((filterItem != null && temp.stackType == filterItem) || filterItem == null) return temp.GetItem();
+            if ((filterItem != null && temp.StackType == filterItem) || filterItem == null) return temp.GetItem();
 
             return null;
         }
@@ -104,7 +104,7 @@ namespace Factory.Buildings {
             if (producingItem == null) return false;
 
             ItemStack temp = GetFromInventory(producingItem);
-            if ((filterItem != null && temp.stackType == filterItem) || filterItem == null) return !temp.IsEmpty();
+            if ((filterItem != null && temp.StackType == filterItem) || filterItem == null) return !temp.IsEmpty();
 
             return false;
         }

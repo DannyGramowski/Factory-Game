@@ -5,7 +5,7 @@ using UnityEngine;
 namespace Factory.Core {
 
     public static class Utils {
-        public static Vector3 ROTATE90Y = new Vector3(0, 90, 0);
+        public static readonly Vector3 ROTATE90Y = new Vector3(0, 90, 0);
         public static readonly string ITEM_FOLDER_PATH = "Assets/Prefabs/Resources/Items";
         public static readonly string BUILDING_FOLDER_PATH = "Assets/Prefabs/Resources/Building";
         public static readonly string SAVE_PATH = Application.dataPath + "/saves";
@@ -14,7 +14,9 @@ namespace Factory.Core {
 
 
         public static int CHAR_TO_INT = 48;
-        public static string Vector2IntToString(Vector2 vector2) {
+        public static string Vector2IntToString(Vector2 vector2)
+        {
+            Random.Range(0,5);
             return "(" + (int)vector2.x + "," + (int)vector2.y + ")";
         }
 
@@ -38,9 +40,7 @@ namespace Factory.Core {
         }
 
         public static Vector2Int SwapVector2(Vector2Int input) {
-            int x = input.x;
-            input.x = input.y;
-            input.y = x;
+            (input.x, input.y) = (input.y, input.x);
             return input;
         }
 
@@ -67,7 +67,7 @@ namespace Factory.Core {
         }
 
         public static Direction AngleToDirection(float angle) {
-            angle = AngleTo90s(ReduceAngle(angle));
+            angle = AngleTo90S(ReduceAngle(angle));
             //   Debug.Log("angle to direction angle " + angle);
             switch (angle) {
                 case 0:
@@ -88,7 +88,7 @@ namespace Factory.Core {
             return AngleToDirection(angle);
         }
 
-        public static float AngleTo90s(float angle) {
+        public static float AngleTo90S(float angle) {
             float angleDifference = angle % 90;
             if (angleDifference > 45) {
                 angle += angleDifference;
@@ -132,12 +132,12 @@ namespace Factory.Core {
             return Vector3SetY(transform.position, GlobalPointers.itemHeight);
         }
 
-        public static List<T> GetAssets<T>(string searchName, string[] path) where T : UnityEngine.Object {
+        public static List<T> GetAssets<T>(string searchName, string[] path) where T : Object {
             string[] assets = AssetDatabase.FindAssets(searchName, path);
             List<T> output = new List<T>();
             foreach (string guid in assets) {
                 T temp = AssetDatabase.LoadAssetAtPath<T>(AssetDatabase.GUIDToAssetPath(guid));
-                if (temp != null) output.Add(temp);
+                if (!temp.Equals(null)) output.Add(temp);
             }
             return output;
 

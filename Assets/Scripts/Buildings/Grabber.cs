@@ -44,15 +44,15 @@ namespace Factory.Buildings {
         }
 
         public bool HasConnectedBuilding() {
-            return connectedBuilding != null;
+            return !connectedBuilding.Equals(null);
         }
 
         public bool HasConnectedBelt() {
-            return connectedBelt != null;
+            return !connectedBelt.Equals(null);
         }
 
         public bool HasGrabberSpot() {
-            return grabberSpot != null;
+            return !grabberSpot.Equals(null);
         }
 
         public bool HasBothConnections() {
@@ -64,12 +64,12 @@ namespace Factory.Buildings {
         }
 
         public override void Place(Direction direc) {
-            if (hoverBuilding == null) return;
+            if (hoverBuilding.Equals(null)) return;
 
             if (ValidPlacment(baseCell.pos)) {
                 Belt belt = hoverBuilding as Belt;
-                if (belt != null) {
-                    if (belt.grabber == null) {
+                if (belt is not null) {
+                    if (belt.grabber.Equals(null)) {
                         AddBelt(belt, !HasConnectedBuilding());
                     }
                 } else {
@@ -128,7 +128,7 @@ namespace Factory.Buildings {
         }
 
         private void UpdateItem() {
-            arrow.color = movingItem != null ? Color.green : Color.red;
+            arrow.color = movingItem is not null ? Color.green : Color.red;
 
             if (movingItem) {
                 if (timer.TimerDone()) {
@@ -196,11 +196,7 @@ namespace Factory.Buildings {
             GetComponent<BoxCollider>().center = position.localPosition;
             
             //arrow.transform.LookAt(to.itemPos);
-            if (toBuilding) {
-                arrow.transform.eulerAngles = new Vector3(90, 180, 0);
-            } else {
-                arrow.transform.eulerAngles = new Vector3(90, 0, 0);
-            }
+            arrow.transform.eulerAngles = toBuilding ? new Vector3(90, 180, 0) : new Vector3(90, 0, 0);
         }
 
         private bool ValidPlacment(Vector2Int currHover) {
@@ -301,21 +297,15 @@ namespace Factory.Buildings {
             if (showDebug) {
                 /*  Gizmos.color = Color.white;
                   Gizmos.DrawSphere(currHover.itemPos, 0.5f);*/
-                if (HasConnectedBelt()) {
-                    if (toBuilding) {
-                        Gizmos.color = Color.cyan;
-                    } else {
-                        Gizmos.color = Color.magenta;
-                    }
+                if (HasConnectedBelt())
+                {
+                    Gizmos.color = toBuilding ? Color.cyan : Color.magenta;
                     Gizmos.DrawCube(connectedBelt.itemPos, Vector3.one * 0.5f);
                 }
 
-                if (HasGrabberSpot()) {
-                    if (toBuilding) {
-                        Gizmos.color = Color.magenta;
-                    } else {
-                        Gizmos.color = Color.cyan;
-                    }
+                if (HasGrabberSpot())
+                {
+                    Gizmos.color = toBuilding ? Color.magenta : Color.cyan;
                     Gizmos.DrawCube(grabberSpot.cell.itemPos, Vector3.one * 0.5f);
                 }
 

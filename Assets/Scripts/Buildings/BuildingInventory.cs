@@ -26,14 +26,14 @@ namespace Factory.Buildings {
 
         public int GetStackIndex(Item item) {
             for (int i = 0; i < inventory.Count; i++) {
-                if (inventory[i].stackType.Equals(item)) return i;
+                if (inventory[i].StackType.Equals(item)) return i;
             }
             return -1;
         }
 
         public Item GetFirstItem() {
             foreach (ItemStack itemStack in inventory) {
-                if (itemStack.stackType != null) return itemStack.GetItem();
+                if (itemStack.StackType != null) return itemStack.GetItem();
             }
             return null;
         }
@@ -44,7 +44,7 @@ namespace Factory.Buildings {
 
         public ItemStack GetEmptyItemStack() {
             foreach (ItemStack itemStack in inventory) {
-                if (!itemStack.stackType) {
+                if (!itemStack.StackType) {
                     return itemStack;
                 }
             }
@@ -57,7 +57,7 @@ namespace Factory.Buildings {
 
         public ItemStack GetItemStack(Item item, int start) {
             for (int i = 0; i < inventory.Count; i++) {
-                if (!inventory[i].IsEmpty() && inventory[i].stackType.Equals(item)) return inventory[i];
+                if (!inventory[i].IsEmpty() && inventory[i].StackType.Equals(item)) return inventory[i];
             }
             return null;
         }
@@ -69,7 +69,7 @@ namespace Factory.Buildings {
 
         public bool HasItem(Item item) {
             foreach (ItemStack itemStack in inventory) {
-                if (itemStack.stackType == item) return true;
+                if (itemStack.StackType == item) return true;
             }
             return false;
         }
@@ -129,30 +129,32 @@ namespace Factory.Buildings {
 
     [System.Serializable]
     public class ItemStack {
-        [SerializeField] List<Item> stack = new List<Item>();
-        public Item stackType;
+        [SerializeField] Stack<Item> stack = new Stack<Item>();
+        public Item StackType { get; private set; }
+        private Item _stackType = null;
 
         public bool ValidItem(Item item) {
-            if (stackType != null) Debug.Assert(stackType.stackSize > 0, "you need to give " + stackType.itemName + " a stack size greater than 0");
-            return stackType != null && stackType.Equals(item) && stack.Count < stackType.stackSize;
+            if (_stackType is not null) Debug.Assert(_stackType.stackSize > 0, "you need to give " + _stackType.itemName + " a stack size greater than 0");
+            return _stackType is not null && _stackType.Equals(item) && stack.Count < _stackType.stackSize;
         }
 
         public bool AddItem(Item item) {
             if (ValidItem(item)) {
-                stack.Add(item);
+                stack.Push(item);
                 return true;
-            } else if (!stackType) {
-                stack.Add(item);
-                stackType = stack[0];
+            } else if (stack is not null) {
+                stack.Push(item);
+                _stackType = stack.Peek();
                 return true;
             }
             return false;
         }
 
+        public int GetSize() => stack.Count;
+
         public Item GetItem() {
             if (stack.Count > 0) {
-                Item temp = stack[0];
-                stack.RemoveAt(0);
+                Item temp = stack.Pop();
                 if (stack.Count == 0) {
                     Reset();
                 }
@@ -165,16 +167,16 @@ namespace Factory.Buildings {
             if (IsEmpty()) {
                 return false;
             }
-            return (stack.Count == stackType.stackSize);
+            return (stack.Count == _stackType.stackSize);
         }
 
         public bool IsEmpty() {
-            return stackType == null;
+            return stack is null;
         }
 
         //item type, number of items in list
         public SVector2 Save() {
-            return new SVector2(Item.ItemIndex(stackType),stack.Count);
+            return new SVector2(Item.ItemIndex(_stackType),stack.Count);
         }
 
         public void Load(SVector2 v2) {
@@ -186,13 +188,13 @@ namespace Factory.Buildings {
         }
 
         private void Reset() {
-            stackType = null;
+            StackType = null;
         }
 
         public override string ToString() {
-            if (stackType == null) return "empty";
+            if (_stackType == null) return "empty";
 
-            return stackType.itemName + " item stack";
+            return _stackType.itemName + " item stack";
         }
     }
 }
