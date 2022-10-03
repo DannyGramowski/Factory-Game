@@ -1,17 +1,15 @@
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Factory.Core;
 using Factory.Saving;
 
 namespace Factory.Buildings {
-    public abstract class ProductionBuilding : Building {
-        public List<GrabberSpot> grabberSpots = new List<GrabberSpot>();
+    public abstract class ProductionBuilding : Building, IPickupable, IDeliverable {
+        public List<DroneLine> droneLines = new List<DroneLine>();
 
         [SerializeField] protected BuildingInventory inventory;
         [SerializeField] int numberOfStacks = 3;
-
-        List<Grabber> inGrabbers = new List<Grabber>();
-        List<Grabber> outGrabbers = new List<Grabber>();
 
         protected override void Awake() {
             //Debug.Assert(numberOfStacks > 0 || this is Assembler, "you need to set the number of inventory slots");
@@ -20,7 +18,7 @@ namespace Factory.Buildings {
         }
 
         public override void Place(Direction direction) {
-            SetUpGrabberSpots();
+            //SetUpGrabberSpots();
             base.Place(direction);
         }
 
@@ -34,7 +32,11 @@ namespace Factory.Buildings {
             base.OverrideSave(dict);
         }
 
-        private void SetUpGrabberSpots() {
+        protected void AddDroneLine(DroneLine droneLine) {
+            droneLines.Add(droneLine);
+        }
+
+        /*private void SetUpGrabberSpots() {
             foreach (GrabberSpot g in grabberSpots) {
                 g.SetGrabberCell(this);
             }
@@ -69,8 +71,23 @@ namespace Factory.Buildings {
                 }
             }
             return null;
-        }
+        }*/
 
+        #region pickup and deliver
+        public Vector3 GetPosition() => transform.position;
+        public Stack<Item> Pickup(Item itemType, int amount) => inventory.GetItems(itemType, amount);
+        public void Deliver(Stack<Item> items) => inventory.TakeItems(items);
+        public int GetMaxDeliverySize(Item itemType) {
+            var output = 0;
+            for(int i = 0; i < inventory.GetNumberStacks; i++) {
+                var stack = inventory.GetItemStack(i);
+                if (stack.StackType == itemType) output += stack.GetCapacityLeft;
+                else if (stack.IsEmpty()) output += itemType.stackSize;
+            }
+            return output;
+        }
+        #endregion
+        
         public virtual void ItemIn(Item item) { }
 
         public virtual bool ItemInValid(Item item) { return false; }
@@ -78,9 +95,10 @@ namespace Factory.Buildings {
         public virtual Item ItemOut(Item filterItem) { return null; }
 
         public virtual bool ItemOutValid(Item filterItem) { return false; }
+        
     }
 
-    [System.Serializable]
+    /*[System.Serializable]
     public class GrabberSpot {
         public Vector2Int offSet;
         public Cell cell;
@@ -111,7 +129,7 @@ namespace Factory.Buildings {
             directions = setDirections;
             spotType = ioType;
         }
-    }
+    }*/
 
     public enum IOType {
         input = -1,

@@ -1,10 +1,10 @@
-﻿using Factory.Core;
+﻿using System.Collections.Generic;
+using Factory.Core;
 using UnityEngine;
 
 namespace Factory.Buildings {
-    public interface IPickupable {
+    public interface IPickupable: IPosition {
         
-        public Item[] Pickup(Item itemtype);
-        public Vector3 GetPosition();
+        public Stack<Item> Pickup(Item itemType, int amount);
     }
 }

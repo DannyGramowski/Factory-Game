@@ -6,8 +6,8 @@ using Factory.Saving;
 namespace Factory.Buildings {
     [System.Serializable]
     public class BuildingInventory {
-        [SerializeField] List<ItemStack> inventory = new List<ItemStack>();
-        [SerializeField] int maxStacks;
+        [SerializeField] private List<ItemStack> inventory = new List<ItemStack>();
+        [SerializeField] private int maxStacks;
 
         public BuildingInventory(int itemStackSlots) {
            // Debug.Log("constructed building inventory");
@@ -38,13 +38,41 @@ namespace Factory.Buildings {
             return null;
         }
 
+        public Stack<Item> GetItems(Item itemType, int amount) {
+            var output = new Stack<Item>(amount);
+            var index = 0;
+            do {
+                var stack = GetItemStack(itemType);
+                if (stack is null) break;
+                while (!stack.IsEmpty()) {
+                    output.Push(stack.GetItem());
+                    index++;
+                    if (index == amount) return output;
+                }
+            } while (true);
+
+            return index == 0 ? null : output;
+        }
         public Item GetItem(Item item) {
             return GetItemStack(item).GetItem();
         }
 
+        public void TakeItems(Stack<Item> items) {
+            do {
+                var stack = GetItemStack(items.Peek());
+                if(stack == null) return;
+                while (!stack.IsFull()) {
+                    stack.AddItem(items.Pop());
+                    if (items.Count == 0) return;
+                }
+            } while (true);
+
+
+        }
+        
         public ItemStack GetEmptyItemStack() {
             foreach (ItemStack itemStack in inventory) {
-                if (!itemStack.StackType) {
+                if (itemStack.StackType is not null) {
                     return itemStack;
                 }
             }
@@ -56,9 +84,10 @@ namespace Factory.Buildings {
         }
 
         public ItemStack GetItemStack(Item item, int start) {
-            for (int i = 0; i < inventory.Count; i++) {
-                if (!inventory[i].IsEmpty() && inventory[i].StackType.Equals(item)) return inventory[i];
+            foreach (var stack in inventory) {
+                if (!stack.IsEmpty() && stack.StackType.Equals(item)) return stack;
             }
+
             return null;
         }
 
@@ -73,21 +102,12 @@ namespace Factory.Buildings {
             }
             return false;
         }
+        
+        public bool HasSpace(Item item, int amount = 1) {
+            foreach (var stack in inventory) {
+                if (stack.StackType == item && stack.GetCapacityLeft >= amount) return true;
+            }
 
-        public bool HasSpace(Item item) {
-            int startNum = 0;
-            do {
-                ItemStack itemStack = GetItemStack(item, startNum);
-                if (itemStack != null) {
-                    if (!itemStack.IsFull()) {
-                        return true;
-                    } else {
-                        startNum++;
-                    }
-                } else {
-                    break;
-                }
-            } while (startNum < inventory.Count);
             return HasEmptyStack();
         }
 
@@ -95,9 +115,21 @@ namespace Factory.Buildings {
             return GetEmptyItemStack() != null;
         }
 
+        public bool AddItemToStack(Item[] items) {
+            ItemStack itemStack = GetItemStack(items[0]) ?? GetEmptyItemStack();
+            if (itemStack != null) {
+                int i = 0;
+                while (i < items.Length && itemStack.AddItem(items[i])) {
+                    i++;
+                }
+                return items.Length == i;//returns true if it added all of the items
+            }
+           
+            return false;
+        }
+        
         public bool AddItemToStack(Item item) {
             ItemStack itemStack = GetItemStack(item);
-            //        Debug.Log("item stack " + itemStack);
             if (itemStack != null) {
                 return itemStack.AddItem(item);
             }
@@ -108,8 +140,9 @@ namespace Factory.Buildings {
             return false;
         }
 
+        public int GetNumberStacks => inventory.Count;
+        
         public object Save() {
-            //Dictionary<string, object> dict = new Dictionary<string, object>();
             List<SVector2> list = new List<SVector2>();
             foreach(ItemStack stack in inventory) {
                 list.Add(stack.Save());
@@ -118,7 +151,6 @@ namespace Factory.Buildings {
         }
 
         public void Load(object obj) {
-
             List<SVector2> list = (List<SVector2>) obj;
             if (inventory.Count == 0) return;
             for(int i = 0; i < list.Count; i++) {
@@ -131,7 +163,7 @@ namespace Factory.Buildings {
     public class ItemStack {
         [SerializeField] Stack<Item> stack = new Stack<Item>();
         public Item StackType { get; private set; }
-        private Item _stackType = null;
+        private Item _stackType;
 
         public bool ValidItem(Item item) {
             if (_stackType is not null) Debug.Assert(_stackType.stackSize > 0, "you need to give " + _stackType.itemName + " a stack size greater than 0");
@@ -151,6 +183,7 @@ namespace Factory.Buildings {
         }
 
         public int GetSize() => stack.Count;
+        public int GetCapacityLeft => _stackType.stackSize - GetSize();
 
         public Item GetItem() {
             if (stack.Count > 0) {

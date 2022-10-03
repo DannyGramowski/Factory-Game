@@ -1,10 +1,10 @@
-﻿using Factory.Core;
+﻿using System.Collections.Generic;
+using Factory.Core;
 using UnityEngine;
 
 namespace Factory.Buildings {
-    public interface IDeliverable {
-        public void Deliver(Item[] items);
-        public Vector3 GetPosition();
-        public int GetMaxDeliverySize();
+    public interface IDeliverable: IPosition {
+        public void Deliver(Stack<Item> items);
+        public int GetMaxDeliverySize(Item itemType);
     }
 }

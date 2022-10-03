@@ -1,19 +1,21 @@
 ﻿using Factory.Buildings;
+using Factory.Core;
 using Factory.Units.BaseUnits;
 
 namespace Factory.Units.Actions {
     public class ADeliver : IAction {
-        private Drone _drone;
+        private IItemCarrier _carrier;
         private IDeliverable _deliverable;
+        private Item _itemType;
 
-
-        public ADeliver(Drone drone, IDeliverable deliverable) {
-            _drone = drone;
+        public ADeliver(IItemCarrier carrier, IDeliverable deliverable, Item item) {
+            _carrier = carrier;
             _deliverable = deliverable;
+            _itemType = item;
         }
         
         public void OnInitiate() {
-            _deliverable.Deliver(_drone.DeliverItem(_deliverable.GetMaxDeliverySize()));
+            _deliverable.Deliver(_carrier.DeliverItem(_deliverable.GetMaxDeliverySize(_itemType)));
         }
 
         public void OnTick() { }

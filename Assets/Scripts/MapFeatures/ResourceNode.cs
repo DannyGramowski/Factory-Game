@@ -1,4 +1,5 @@
-﻿using Factory.Buildings;
+﻿using System.Collections.Generic;
+using Factory.Buildings;
 using Factory.Core;
 using UnityEngine;
 
@@ -15,10 +16,9 @@ namespace Factory.MapFeatures {
 
         public float GetHarvestTime() => timeToHarvest;
 
-        public Item[] Pickup(Item itemType) {
+        public Vector3 GetPosition() => transform.position;
+        public Stack<Item> Pickup(Item itemType, int amount) {
             return null;
         }
-
-        public Vector3 GetPosition() => transform.position;
     }
 }

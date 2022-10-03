@@ -1,3 +1,4 @@
+/*
 using Factory.Buildings;
 using UnityEditor;
 using UnityEditor.Experimental.SceneManagement;
@@ -12,10 +13,11 @@ public class SetUpGrabbersEditor : Editor {
         SetUpGrabber setUp = (SetUpGrabber)target;
         if (GUILayout.Button("generate grabbers")) {
 /*            SerializedObject obj = new SerializedObject(setUp.setGrabbers);
-            SerializedProperty grabberList = obj.FindProperty("setGrabbers.grabberSpots");*/
+            SerializedProperty grabberList = obj.FindProperty("setGrabbers.grabberSpots");#1#
             setUp.GenerateGrabbers();
             var prefabStage = PrefabStageUtility.GetCurrentPrefabStage();
             if(prefabStage != null) EditorSceneManager.MarkSceneDirty(prefabStage.scene);
         }
     }
 }
+*/

@@ -1,3 +1,4 @@
+/*
 using UnityEngine;
 using Factory.Core;
 using Factory.Saving;
@@ -296,7 +297,7 @@ namespace Factory.Buildings {
         private void OnDrawGizmos() {//cyan for the input and magenta for the output
             if (showDebug) {
                 /*  Gizmos.color = Color.white;
-                  Gizmos.DrawSphere(currHover.itemPos, 0.5f);*/
+                  Gizmos.DrawSphere(currHover.itemPos, 0.5f);#1#
                 if (HasConnectedBelt())
                 {
                     Gizmos.color = toBuilding ? Color.cyan : Color.magenta;
@@ -325,4 +326,5 @@ namespace Factory.Buildings {
         }
     }
 }
+*/
 

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System.Collections;
+using System.Collections.Generic;
 using Factory.Buildings;
 using Factory.Core;
 using Factory.Units.Actions;
@@ -25,22 +26,22 @@ namespace Factory.Units.BaseUnits
         }
 
 
-        public void PickUpItem(Item[] items) {
+        public void PickUpItem(Stack<Item> items) {
             int i = 0;
             while (_cargo.GetSize() < stackCapacity) {
-                if(items.Length <= i) return;
-                _cargo.AddItem(items[i]);
+                if(items.Count <= i) return;
+                _cargo.AddItem(items.Pop());
                 i++;
             }                
         }
 
         public Item GetItemType() => _cargo.StackType;
 
-        public Item[] DeliverItem(int maxSize) {
+        public Stack<Item> DeliverItem(int maxSize) {
             int deliverySize = maxSize > stackCapacity ? stackCapacity : maxSize;
-            Item[] output = new Item[deliverySize];
+            Stack<Item> output = new Stack<Item>();
             for (int i = 0; i < deliverySize; i++) {
-                output[i] = _cargo.GetItem();
+                output.Push(_cargo.GetItem());
             }
 
             return output;
