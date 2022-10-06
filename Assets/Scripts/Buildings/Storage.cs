@@ -3,19 +3,19 @@
 namespace Factory.Buildings {
     public class Storage : ProductionBuilding {
 
-        public override bool ItemInValid(Item item) {
+        /*public override bool ItemInValid(Item item) {
             return inventory.HasSpace(item);
-        }
+        }*/
 
         public override bool ItemOutValid(Item filterItem) {
             return base.ItemOutValid(filterItem);
         }
 
-        public override void ItemIn(Item item) {
+        /*public override void ItemIn(Item item) {
             inventory.AddItemToStack(item);
-        }
+        }*/
 
-        public override Item ItemOut(Item filterItem) {
+        /*public override Item ItemOut(Item filterItem) {
             if (filterItem) {
                 return inventory.GetItemStack(filterItem).GetItem();
             }
@@ -26,6 +26,6 @@ namespace Factory.Buildings {
             } else {
                 return null;
             }
-        }
+        }*/
     }
 }

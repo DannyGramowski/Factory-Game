@@ -1,10 +1,8 @@
 ﻿using System.Collections.Generic;
-using System.Drawing.Printing;
 using Factory.Core;
 using Factory.MapFeatures;
 using Factory.Units.Actions;
 using Factory.Units.BaseUnits;
-using UnityEngine;
 
 namespace Factory.Buildings {
     public class DroneLine {
@@ -21,9 +19,13 @@ namespace Factory.Buildings {
 
         public void AddDrones(List<Drone> drones) {
             foreach (var drone in drones) {
-                SetDroneActions(drone);
-                drones.Add(drone);
+                AddDrones(drone);
             }    
+        }
+
+        public void AddDrones(Drone drone) {
+            SetDroneActions(drone);
+            _drones.Add(drone);
         }
         
         private void SetDroneActions(Drone drone) {
@@ -34,8 +36,8 @@ namespace Factory.Buildings {
                 new ADeliver(drone, _deliveryPoint, drone.GetItemType())
             };
             
-            IAction pickupAction = _pickupPoint is ResourceNode
-                ? new AHarvestResource((ResourceNode)_pickupPoint, drone as IHarvester)
+            IAction pickupAction = _pickupPoint is ResourceNode node
+                ? new AHarvestResource(node, drone as IHarvester)
                 : new APickUp(drone, _pickupPoint, _itemType);
             actionSet[1] = pickupAction;
             

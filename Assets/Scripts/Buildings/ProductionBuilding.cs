@@ -1,25 +1,28 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Factory.Core;
-using Factory.Saving;
+using Factory.MapFeatures;
+using Factory.Units.BaseUnits;
 
 namespace Factory.Buildings {
     public abstract class ProductionBuilding : Building, IPickupable, IDeliverable {
         public List<DroneLine> droneLines = new List<DroneLine>();
-
         [SerializeField] protected BuildingInventory inventory;
         [SerializeField] int numberOfStacks = 3;
+        [SerializeField] private Transform droneTarget;
+
 
         protected override void Awake() {
             //Debug.Assert(numberOfStacks > 0 || this is Assembler, "you need to set the number of inventory slots");
             inventory = new BuildingInventory(numberOfStacks);
             base.Awake();
+
+            
         }
 
-        public override void Place(Direction direction) {
+        public override void Place(Direction placeDirection) {
             //SetUpGrabberSpots();
-            base.Place(direction);
+            base.Place(placeDirection);
         }
 
         protected override void OverrideLoad(Dictionary<string, object> dict) {
@@ -74,17 +77,13 @@ namespace Factory.Buildings {
         }*/
 
         #region pickup and deliver
-        public Vector3 GetPosition() => transform.position;
-        public Stack<Item> Pickup(Item itemType, int amount) => inventory.GetItems(itemType, amount);
-        public void Deliver(Stack<Item> items) => inventory.TakeItems(items);
-        public int GetMaxDeliverySize(Item itemType) {
-            var output = 0;
-            for(int i = 0; i < inventory.GetNumberStacks; i++) {
-                var stack = inventory.GetItemStack(i);
-                if (stack.StackType == itemType) output += stack.GetCapacityLeft;
-                else if (stack.IsEmpty()) output += itemType.stackSize;
-            }
-            return output;
+        public Vector3 GetPosition() => droneTarget.position;
+        public void Pickup(ItemStack itemStack, int amount) {
+            inventory.GetItems(itemStack, amount);
+        }
+        
+        public void Deliver(ItemStack items, int amount) {
+            inventory.AddItems(items, amount);
         }
         #endregion
         

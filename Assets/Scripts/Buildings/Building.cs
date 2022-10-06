@@ -22,7 +22,7 @@ namespace Factory.Buildings {
         static int[] namingNums;
 
         protected virtual void Awake() {
-            SetName();
+            //SetName();
         }
 
         public Vector3 Rotate(Vector3 buildingRot) {
@@ -94,8 +94,8 @@ namespace Factory.Buildings {
             
         }
 
-        public virtual void Place(Direction direc) {
-            direction = direc; 
+        public virtual void Place(Direction placeDirection) {
+            direction = placeDirection; 
             SetPostion();
             SetName();
         }

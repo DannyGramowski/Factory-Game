@@ -56,7 +56,7 @@ namespace Factory.Buildings {
             for (int i = 0; i < recipeItems.Length; i++) {
                 if (recipeItems[i] == null) {
                     ItemStack test1 = GetFromInventory(producingItem.recipe[i]);
-                    Item test2 = test1.GetItem();
+                    Item test2 = test1.GetItems();
                     recipeItems[i] = test2;
                     output &= recipeItems[i] != null;
                 }
@@ -95,7 +95,7 @@ namespace Factory.Buildings {
             if (producingItem == null) return null;
 
             ItemStack temp = GetFromInventory(producingItem);
-            if ((filterItem != null && temp.StackType == filterItem) || filterItem == null) return temp.GetItem();
+            if ((filterItem != null && temp.StackType == filterItem.itemName) || filterItem == null) return temp.GetItems();
 
             return null;
         }
@@ -104,7 +104,7 @@ namespace Factory.Buildings {
             if (producingItem == null) return false;
 
             ItemStack temp = GetFromInventory(producingItem);
-            if ((filterItem != null && temp.StackType == filterItem) || filterItem == null) return !temp.IsEmpty();
+            if ((filterItem != null && temp.StackType == filterItem.itemName) || filterItem == null) return !temp.IsEmpty();
 
             return false;
         }

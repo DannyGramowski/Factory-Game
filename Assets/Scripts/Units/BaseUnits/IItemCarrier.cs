@@ -1,14 +1,19 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using Factory.Buildings;
+﻿using Factory.Buildings;
 using Factory.Core;
+using UnityEngine;
 
 namespace Factory.Units.BaseUnits {
     public interface IItemCarrier {
         public int MaxStackSize();
-        public bool ValidItem(Item item);
+        public bool ValidItem(string item);
         
-        public void PickUpItem(Stack<Item> items);
-        public Stack<Item> DeliverItem(int maxSize);
+        //public void PickUpItem(ItemStack items);
+        public ItemStack GetPickUpStack();
+        public int GetPickupSize();
+        public int GetDeliverySize();
+        public ItemStack GetDeliverStack();
+
+        public Transform GetParent();
+        //public ItemStack DeliverItem(int maxSize);
     }
 }

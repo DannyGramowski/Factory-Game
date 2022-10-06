@@ -8,15 +8,18 @@ namespace Factory.MapFeatures {
     public class ResourceNode : MonoBehaviour, IPickupable{
         [SerializeField] private float timeToHarvest = 1;
         [SerializeField] private Item producingItem;
+        [SerializeField] private Transform droneTarget;
 
         public Item HarvestResource() {
-            Item item = Instantiate(producingItem);
+            Item item = Instantiate(producingItem,transform);
             return item;
         }
 
         public float GetHarvestTime() => timeToHarvest;
 
-        public Vector3 GetPosition() => transform.position;
+        public Vector3 GetPosition() => droneTarget.position;
+        public void Pickup(ItemStack itemStack, int amount) { }
+
         public Stack<Item> Pickup(Item itemType, int amount) {
             return null;
         }

@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
 using Factory.Core;
 using UnityEngine;
@@ -13,7 +12,6 @@ namespace Factory.Units.Actions {
             var files = Directory.GetFiles(Application.dataPath + filename, "*.cs");
             foreach (var file in files) {
                 var actionName = Path.GetFileName(file)[..^3];
-                print("name is " + actionName);
                 ActionNames.Add(actionName);
             }
         }

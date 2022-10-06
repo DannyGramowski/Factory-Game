@@ -5,7 +5,7 @@ using UnityEngine;
 namespace Factory.Buildings {
     public class Belt : Building {
         public BeltSystem beltSystem;
-        public Grabber grabber;
+        //public Grabber grabber;
         public Vector3 itemPos;
         public float speed;
         public int beltNum => beltSystem.BeltNum(this);
@@ -16,8 +16,8 @@ namespace Factory.Buildings {
             base.Awake();
         }
 
-        public override void Place(Direction direction) {
-            base.Place(direction);
+        public override void Place(Direction placeDirection) {
+            base.Place(placeDirection);
             itemPos = Utils.Vector3SetY(transform.position, GlobalPointers.itemHeight);
             CheckBeltSystem();
         }

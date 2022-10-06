@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System;
+using System.Drawing.Printing;
 using UnityEngine;
 
 namespace Factory.Units.Actions {
@@ -7,18 +8,19 @@ namespace Factory.Units.Actions {
         public delegate void OnComplete();
 
         private readonly OnComplete _onComplete;
-        private readonly IAction[] _actions;
+        [SerializeField] private IAction[] _actions;
         private readonly bool _looping;
         private int _index;
         private bool _isFinished = false;
         private Unit _unit;
         
         public ActionSet(Unit unit,IAction[] actions, OnComplete onComplete = null, bool looping = false) {
-            Debug.Assert(onComplete is not null || looping != false, "you need to pass in one of the 2");
+            Debug.Assert(onComplete is not null || looping, "you need to pass in one of the 2");
             _actions = actions;
             _looping = looping;
             _onComplete = onComplete;
             _index = 0;
+            _unit = unit;
             unit.ExecuteAction(actions[_index]);
         }
 

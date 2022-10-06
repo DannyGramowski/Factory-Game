@@ -1,11 +1,12 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using UnityEngine;
 using Factory.Buildings;
 using Factory.Saving;
 
 namespace Factory.Core {
 
-    [SelectionBase][RequireComponent(typeof(SavingEntity))]
+    [SelectionBase][RequireComponent(typeof(SavingEntity))][Serializable]
     public class Item : MonoBehaviour, ISaveable {
         public string itemName;
         public Sprite sprite;
@@ -48,6 +49,7 @@ namespace Factory.Core {
             debug = GlobalPointers.showDebug;
             namingNum++;
             name = itemName +" " + namingNum.ToString();
+            Debug.Assert(stackSize > 0, "you need to give " + itemName + " a stack size greater than 0");
         }
 
         private void FixedUpdate() {

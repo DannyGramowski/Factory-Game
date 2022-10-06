@@ -1,4 +1,5 @@
-﻿using Factory.Buildings;
+﻿using System;
+using Factory.Buildings;
 using Factory.Core;
 using Factory.Units.BaseUnits;
 
@@ -14,7 +15,8 @@ namespace Factory.Units.Actions {
         }
 
         public void OnInitiate() {
-            _carrier.PickUpItem(_pickupable.Pickup(_item, _carrier.MaxStackSize()));
+            _pickupable.Pickup(_carrier.GetPickUpStack(), _carrier.GetPickupSize());
+           // _carrier.PickUpItem(_pickupable.Pickup(_item, _carrier.MaxStackSize()));
         }
 
         public void OnTick() { }

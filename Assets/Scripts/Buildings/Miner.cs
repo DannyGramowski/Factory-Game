@@ -11,16 +11,16 @@ namespace Factory.Buildings {
         int itemsProducted = 0;
         float currProduction;
 
-        private void Update() {
+        /*private void Update() {
             if (currProduction <= 0) {
                 SpawnItem();
             } else {
                 currProduction -= productionPerSec * Time.deltaTime;
             }
 
-        }
+        }*/
 
-        void SpawnItem() {
+        /*void SpawnItem() {
             if (maxItemProduced != -1 && itemsProducted == maxItemProduced) return;
             if (spawnItem != null && inventory.HasSpace(spawnItem)) {
                 Item item = Instantiate(spawnItem, transform.position, Quaternion.identity, GlobalPointers.ItemParent);
@@ -33,13 +33,13 @@ namespace Factory.Buildings {
                     Destroy(item.gameObject);
                 }
             }
-        }
+        }*/
 
-        public override Item ItemOut(Item filterItem) {
+        /*public override Item ItemOut(Item filterItem) {
             if (filterItem) {
-                return inventory.GetItem(filterItem);
+                return inventory.GetItems(filterItem);
             } else {
-                return inventory.GetFirstItem();
+                return inventory.GetItems();
             }
         }
 
@@ -49,7 +49,7 @@ namespace Factory.Buildings {
             } else {
                 return inventory.GetFirstItem() != null;
             }
-        }
+        }*/
 
         public int UINum() {
             return 1;
